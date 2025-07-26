@@ -1,0 +1,13 @@
+# Core Framework
+django
+djangorestframework
+
+# Real-time features
+channels
+channels-redis
+
+# Database
+psycopg2-binary
+
+# Environment variables
+python-dotenv
