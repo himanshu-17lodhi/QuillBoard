@@ -1,0 +1,33 @@
+body {
+    font-family: Arial, sans-serif;
+}
+.editor-block {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.editor-block:hover {
+    background-color: #f8f9fa;
+}
+[data-bs-theme="dark"] .editor-block {
+    border-color: #444;
+    background-color: #2a2a2a;
+}
+[data-bs-theme="dark"] .editor-block:hover {
+    background-color: #3a3a3a;
+}
+#connection-status {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+[data-bs-theme="dark"] #connection-status {
+    background: #2a2a2a;
+    border-color: #444;
+    color: #fff;
+}

@@ -1,0 +1,23 @@
+"""
+ASGI config for ThinkFlow project.
+
+It exposes the ASGI callable as a module-level variable named ``application``.
+"""
+
+import os
+from django.core.asgi import get_asgi_application
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.security.websocket import AllowedHostsOriginValidator
+from channels.auth import AuthMiddlewareStack
+import thinkflow.routing
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'thinkflow.settings')
+
+application = ProtocolTypeRouter({
+    "http": get_asgi_application(),
+    "websocket": AllowedHostsOriginValidator(
+        AuthMiddlewareStack(
+            URLRouter(thinkflow.routing.websocket_urlpatterns)
+        )
+    ),
+})
