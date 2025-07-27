@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Your wiki, docs, & projects. Together.</h1>
+                <p class="lead mb-4">Notion is the connected workspace where better, faster work happens.</p>
+                <div class="d-flex gap-3">
+                    <a href="{% url 'signup' %}" class="btn btn-dark btn-lg">Get Notion free</a>
+                    <a href="{% url 'demo' %}" class="btn btn-outline-dark btn-lg">Request a demo →</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="{% static 'images/hero-image.png' %}" alt="Notion Interface" class="img-fluid rounded shadow">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features-section py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Trusted by teams at</h2>
+        <div class="row justify-content-center">
+            {% for company in trusted_companies %}
+            <div class="col-4 col-md-2 text-center mb-4">
+                <img src="{% static company.logo %}" alt="{{ company.name }}" class="img-fluid grayscale" style="max-height: 40px;">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="use-cases py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="h4">Wikis</h3>
+                        <p>Centralize your knowledge. No more hunting for answers.</p>
+                        <a href="#" class="stretched-link">Learn more →</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="h4">Projects</h3>
+                        <p>Manage complex projects without the chaos.</p>
+                        <a href="#" class="stretched-link">Learn more →</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="h4">Docs</h3>
+                        <p>Simple, powerful, beautiful. Next-gen notes & docs.</p>
+                        <a href="#" class="stretched-link">Learn more →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="testimonials py-5 bg-dark text-white">
+    <div class="container">
+        <h2 class="text-center mb-5">What our users say</h2>
+        <div class="row">
+            {% for testimonial in testimonials %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 bg-secondary border-0">
+                    <div class="card-body">
+                        <p class="card-text">"{{ testimonial.text }}"</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <img src="{% static testimonial.avatar %}" alt="{{ testimonial.name }}" class="rounded-circle me-3" width="50">
+                            <div>
+                                <h5 class="mb-0">{{ testimonial.name }}</h5>
+                                <small class="text-muted">{{ testimonial.position }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="cta-section py-5">
+    <div class="container text-center">
+        <h2 class="mb-4">Get started for free</h2>
+        <p class="lead mb-4">Try Notion with your team for free. No credit card required.</p>
+        <a href="{% url 'signup' %}" class="btn btn-dark btn-lg px-4">Try Notion free</a>
+    </div>
+</section>
+{% endblock %}
