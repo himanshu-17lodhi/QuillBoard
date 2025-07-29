@@ -9,8 +9,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'notion_clone.settings.productio
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
     "websocket": AuthMiddlewareStack(
-        URLRouter(
-            websocket_urlpatterns
-        )
+        URLRouter(websocket_urlpatterns)
     ),
 })

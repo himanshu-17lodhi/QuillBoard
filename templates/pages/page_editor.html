@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page.title }} - QuillBoard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/components/editor.css">
+{% endblock %}
+
+{% block content %}
+<div class="editor-container">
+    <div class="editor-header flex items-center justify-between p-4 border-b">
+        <div class="flex items-center space-x-4">
+            <button id="back-button" class="text-gray-600 hover:text-gray-900">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+            </button>
+            <div>
+                <input type="text" 
+                       id="page-title" 
+                       value="{{ page.title }}" 
+                       class="text-2xl font-bold bg-transparent border-none focus:outline-none"
+                       placeholder="Untitled">
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div id="collaboration-status" class="text-sm text-gray-600"></div>
+            <button id="share-button" class="btn-primary">Share</button>
+        </div>
+    </div>
+
+    <div id="editor" 
+         class="editor-content p-8" 
+         data-page-id="{{ page.id }}"
+         data-workspace-id="{{ page.workspace.id }}">
+    </div>
+
+    <div id="block-toolbar" class="hidden fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg p-2">
+        <div class="flex space-x-2">
+            <button data-block-type="text" class="toolbar-btn">Text</button>
+            <button data-block-type="heading" class="toolbar-btn">Heading</button>
+            <button data-block-type="list" class="toolbar-btn">List</button>
+            <button data-block-type="code" class="toolbar-btn">Code</button>
+            <button data-block-type="image" class="toolbar-btn">Image</button>
+        </div>
+    </div>
+</div>
+
+<div id="share-modal" class="modal hidden">
+    <div class="modal-content">
+        <h3 class="text-lg font-bold mb-4">Share Page</h3>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Page Link</label>
+            <div class="flex mt-1">
+                <input type="text" 
+                       id="share-link" 
+                       readonly 
+                       value="{{ request.scheme }}://{{ request.get_host }}/p/{{ page.id }}"
+                       class="flex-1 form-input">
+                <button id="copy-link" class="ml-2 btn-secondary">Copy</button>
+            </div>
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Invite Members</label>
+            <input type="email" 
+                   id="invite-email" 
+                   placeholder="Enter email address"
+                   class="mt-1 form-input w-full">
+        </div>
+        <div class="flex justify-end">
+            <button id="close-share-modal" class="btn-secondary">Close</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/components/editor.js" type="module"></script>
+<script>
+    window.ENABLE_COLLABORATION = true;
+    window.PAGE_DATA = {{ page_data|json_script:"page-data" }};
+</script>
+{% endblock %}

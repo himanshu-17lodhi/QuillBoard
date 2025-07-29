@@ -1,31 +1,102 @@
-export class Presence {
-    constructor() {
-        this.container = document.querySelector('#presence-indicators');
-        this.indicators = new Map();
+import { WebSocketClient } from './websocket.js';
+
+export class PresenceManager {
+    constructor(options = {}) {
+        this.workspaceId = options.workspaceId;
+        this.onPresenceUpdate = options.onPresenceUpdate;
+        this.activeUsers = new Map();
+        this.lastActivity = Date.now();
+
+        this.websocket = new WebSocketClient({
+            endpoint: `/ws/presence/${this.workspaceId}/`,
+            onMessage: this.handleMessage.bind(this),
+            onConnect: this.handleConnect.bind(this)
+        });
+
+        this.setupActivityTracking();
+        this.startHeartbeat();
     }
 
-    updateCollaborators(collaborators) {
-        collaborators.forEach(([userId, data]) => {
-            this.updateIndicator(userId, data);
+    setupActivityTracking() {
+        const events = ['mousemove', 'keydown', 'click', 'scroll'];
+        events.forEach(eventName => {
+            document.addEventListener(eventName, () => {
+                this.lastActivity = Date.now();
+                this.broadcastPresence();
+            });
         });
     }
 
-    updateIndicator(userId, data) {
-        let indicator = this.indicators.get(userId);
-        
-        if (!indicator) {
-            indicator = this.createIndicator(userId);
-            this.indicators.set(userId, indicator);
-        }
-
-        indicator.classList.toggle('active', data.status === 'active');
-        indicator.title = `${data.name} - ${data.status}`;
+    handleConnect() {
+        this.broadcastPresence();
     }
 
-    createIndicator(userId) {
-        const indicator = document.createElement('div');
-        indicator.className = 'presence-indicator';
-        this.container.appendChild(indicator);
-        return indicator;
+    handleMessage(message) {
+        switch (message.type) {
+            case 'presence_update':
+                this.handlePresenceUpdate(message.data);
+                break;
+            case 'user_left':
+                this.handleUserLeft(message.data);
+                break;
+            default:
+                console.warn('Unknown presence message type:', message.type);
+        }
+    }
+
+    handlePresenceUpdate(data) {
+        data.forEach(presence => {
+            this.activeUsers.set(presence.userId, {
+                ...presence,
+                lastSeen: Date.now()
+            });
+        });
+
+        this.cleanupInactiveUsers();
+        this.notifyPresenceUpdate();
+    }
+
+    handleUserLeft(data) {
+        this.activeUsers.delete(data.userId);
+        this.notifyPresenceUpdate();
+    }
+
+    broadcastPresence() {
+        this.websocket.send({
+            type: 'presence',
+            data: {
+                lastActivity: this.lastActivity
+            }
+        });
+    }
+
+    cleanupInactiveUsers() {
+        const now = Date.now();
+        const timeout = 1000 * 60; // 1 minute
+
+        for (const [userId, data] of this.activeUsers) {
+            if (now - data.lastSeen > timeout) {
+                this.activeUsers.delete(userId);
+            }
+        }
+    }
+
+    notifyPresenceUpdate() {
+        if (this.onPresenceUpdate) {
+            const presenceData = Array.from(this.activeUsers.values());
+            this.onPresenceUpdate(presenceData);
+        }
+    }
+
+    startHeartbeat() {
+        setInterval(() => {
+            if (Date.now() - this.lastActivity < 1000 * 60 * 5) { // 5 minutes
+                this.broadcastPresence();
+            }
+        }, 30000); // Every 30 seconds
+    }
+
+    disconnect() {
+        this.websocket.disconnect();
     }
 }

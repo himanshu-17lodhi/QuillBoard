@@ -1,0 +1,118 @@
+/* Editor component styles */
+.editor-container {
+    height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
+}
+
+.editor-content {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+}
+
+.block {
+    position: relative;
+    margin: 0.5rem 0;
+    transition: background-color 0.2s;
+}
+
+.block:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.block-handle {
+    position: absolute;
+    left: -2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: move;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.block:hover .block-handle {
+    opacity: 1;
+}
+
+.block-selected {
+    background-color: rgba(66, 153, 225, 0.1);
+}
+
+.block-toolbar {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+    z-index: 10;
+}
+
+.toolbar-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    color: #4B5563;
+    transition: all 0.2s;
+}
+
+.toolbar-btn:hover {
+    background-color: #F3F4F6;
+    color: #1F2937;
+}
+
+/* Block-specific styles */
+.text-block {
+    min-height: 1.5rem;
+}
+
+.heading-block {
+    margin: 1.5rem 0;
+}
+
+.list-block ul, .list-block ol {
+    margin-left: 1.5rem;
+}
+
+.code-block {
+    font-family: 'Fira Code', monospace;
+    background-color: #1F2937;
+    color: #F9FAFB;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+}
+
+.image-block img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Collaboration styles */
+.cursor {
+    position: absolute;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.cursor-label {
+    position: absolute;
+    top: -1.5rem;
+    left: 0;
+    background-color: var(--cursor-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+.selection {
+    position: absolute;
+    background-color: var(--selection-color);
+    opacity: 0.2;
+    pointer-events: none;
+}
