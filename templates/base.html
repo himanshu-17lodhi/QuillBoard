@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}QuillBoard{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50">
+    {% include 'components/navbar.html' %}
+    
+    <div class="flex h-screen">
+        {% block sidebar %}
+            {% include 'components/sidebar.html' %}
+        {% endblock %}
+        
+        <main class="flex-1 overflow-y-auto p-6">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} mb-4">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
