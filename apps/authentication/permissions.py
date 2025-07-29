@@ -1,22 +1,23 @@
 from rest_framework import permissions
 
-class IsOwner(permissions.BasePermission):
+class IsVerifiedUser(permissions.BasePermission):
     """
-    Custom permission to only allow owners of an object to edit it.
+    Permission check for verified users.
+    """
+    def has_permission(self, request, view):
+        return request.user and request.user.is_authenticated and request.user.is_verified
+
+class IsSameUser(permissions.BasePermission):
+    """
+    Permission check for same user.
     """
     def has_object_permission(self, request, view, obj):
-        return obj.user == request.user
+        return obj == request.user
 
-class IsAdmin(permissions.BasePermission):
+class CanManageUsers(permissions.BasePermission):
     """
-    Custom permission to only allow admin users.
+    Permission check for user management.
+    Only staff users can manage other users.
     """
     def has_permission(self, request, view):
         return request.user and request.user.is_staff
-
-class IsWorkspaceAdmin(permissions.BasePermission):
-    """
-    Custom permission to only allow workspace admins.
-    """
-    def has_object_permission(self, request, view, obj):
-        return obj.workspace.admins.filter(id=request.user.id).exists()
