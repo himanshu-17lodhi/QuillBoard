@@ -1,24 +1,13 @@
-from pathlib import Path
 import os
 from datetime import timedelta
-import environ
+from decouple import config, Csv
 
-# Initialize environ
-env = environ.Env()
-environ.Env.read_env()
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Build paths inside the project
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', cast=bool, default=False)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv(), default='')
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG', False)
-
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
-
-# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -27,8 +16,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-
-    # Third party apps
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
@@ -40,8 +27,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.github',
-
-    # Local apps
     'apps.authentication',
     'apps.workspaces',
     'apps.pages',
@@ -65,12 +50,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'notion_clone.urls'
+ROOT_URLCONF = 'QuillBoard.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -83,15 +68,20 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'notion_clone.wsgi.application'
-ASGI_APPLICATION = 'notion_clone.asgi.application'
+WSGI_APPLICATION = 'QuillBoard.wsgi.application'
+ASGI_APPLICATION = 'QuillBoard.asgi.application'
 
-# Database
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='sqlite:///db.sqlite3')
+    'default': {
+        'ENGINE': config('DB_ENGINE', default='django.db.backends.sqlite3'),
+        'NAME': config('DB_NAME', default=os.path.join(BASE_DIR, 'db.sqlite3')),
+        'USER': config('DB_USER', default=''),
+        'PASSWORD': config('DB_PASSWORD', default=''),
+        'HOST': config('DB_HOST', default=''),
+        'PORT': config('DB_PORT', default=''),
+    }
 }
 
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -107,25 +97,20 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Custom User Model
 AUTH_USER_MODEL = 'authentication.User'
 
-# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-# Media files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -138,7 +123,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20,
 }
 
-# JWT Settings
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
@@ -146,81 +130,67 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
 }
 
-# Channels
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [env('REDIS_URL', default='redis://localhost:6379/0')],
+            "hosts": [config('REDIS_URL', default='redis://localhost:6379/0')],
         },
     },
 }
 
-# Celery
-CELERY_BROKER_URL = env('REDIS_URL', default='redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = env('REDIS_URL', default='redis://localhost:6379/0')
+CELERY_BROKER_URL = config('REDIS_URL', default='redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = config('REDIS_URL', default='redis://localhost:6379/0')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 
-# Email
-EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
-EMAIL_HOST = env('EMAIL_HOST', default='')
-EMAIL_PORT = env.int('EMAIL_PORT', default=587)
-EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
-EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='noreply@quillboard.com')
+EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = config('EMAIL_HOST', default='')
+EMAIL_PORT = config('EMAIL_PORT', cast=int, default=587)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool, default=True)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@quillboard.com')
 
-# Authentication
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-# AllAuth Settings
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
-# OAuth Settings
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('GOOGLE_CLIENT_ID', default='')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('GOOGLE_CLIENT_SECRET', default='')
-SOCIAL_AUTH_GITHUB_KEY = env('GITHUB_CLIENT_ID', default='')
-SOCIAL_AUTH_GITHUB_SECRET = env('GITHUB_CLIENT_SECRET', default='')
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('GOOGLE_CLIENT_ID', default='')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('GOOGLE_CLIENT_SECRET', default='')
+SOCIAL_AUTH_GITHUB_KEY = config('GITHUB_CLIENT_ID', default='')
+SOCIAL_AUTH_GITHUB_SECRET = config('GITHUB_CLIENT_SECRET', default='')
 
-# CORS Settings
-CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=[
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-])
+CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', cast=Csv(), default='http://localhost:8000,http://127.0.0.1:8000')
 
 # AWS S3 Settings (Optional)
-if env('USE_S3', default=False):
-    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
-    AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME')
-    AWS_S3_CUSTOM_DOMAIN = env('AWS_S3_CUSTOM_DOMAIN', default=None)
+if config('USE_S3', cast=bool, default=False):
+    AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME')
+    AWS_S3_CUSTOM_DOMAIN = config('AWS_S3_CUSTOM_DOMAIN', default=None)
     AWS_S3_OBJECT_PARAMETERS = {
         'CacheControl': 'max-age=86400',
     }
     AWS_DEFAULT_ACL = 'public-read'
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-# OpenAI Settings
-OPENAI_API_KEY = env('OPENAI_API_KEY', default='')
+OPENAI_API_KEY = config('OPENAI_API_KEY', default='')
 
-# Site ID
 SITE_ID = 1
 
-# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Logging
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -237,7 +207,7 @@ LOGGING = {
         },
         'file': {
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs/debug.log',
+            'filename': os.path.join(BASE_DIR, 'logs/debug.log'),
             'formatter': 'verbose',
         },
     },

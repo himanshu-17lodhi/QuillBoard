@@ -3,9 +3,9 @@ Settings module initialization.
 Import the appropriate settings based on the environment.
 """
 import os
-from .testing import *  # noqa
+from .development import *  # noqa
 
 if os.environ.get('DJANGO_ENV') == 'production':
-    from .production import *  # noqa
-elif os.environ.get('DJANGO_ENV') == 'testing':
-    from .testing import *  # noqa
+    from .production import *  
+elif os.environ.get('DJANGO_ENV') == 'development':
+    from .development import * 

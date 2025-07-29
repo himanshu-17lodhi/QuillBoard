@@ -1,25 +1,35 @@
-class HeadingBlock:
-    type = 'heading'
+from .base import BaseBlock
+
+class HeadingBlock(BaseBlock):
+    block_type = "heading"
     schema = {
-        'text': str,
-        'level': int  # 1-6 for h1-h6
+        "type": "object",
+        "properties": {
+            "content": {
+                "type": "string",
+                "maxLength": 1000
+            },
+            "level": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 3
+            }
+        },
+        "required": ["content", "level"]
     }
-    
-    @classmethod
-    def validate(cls, data):
-        """Validate heading block data"""
-        if not isinstance(data.get('text'), str):
-            raise ValueError("Heading text must be a string")
-            
-        level = data.get('level', 1)
-        if not isinstance(level, int) or level < 1 or level > 6:
-            raise ValueError("Heading level must be between 1 and 6")
-        
+
+    def validate(self):
+        if not isinstance(self.data.get('content'), str):
+            return False
+        if not isinstance(self.data.get('level'), int):
+            return False
+        if self.data.get('level') not in [1, 2, 3]:
+            return False
         return True
 
-    @classmethod
-    def render_html(cls, data):
-        """Render heading block as HTML"""
-        text = data.get('text', '')
-        level = data.get('level', 1)
-        return f'<h{level}>{text}</h{level}>'
+    def render(self):
+        return {
+            "type": self.block_type,
+            "content": self.data.get('content'),
+            "level": self.data.get('level')
+        }

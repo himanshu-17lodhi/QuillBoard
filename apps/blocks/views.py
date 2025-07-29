@@ -2,151 +2,109 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from .models import Block
-from .serializers import BlockSerializer, BlockDetailSerializer
-from apps.workspaces.models import WorkspaceMember
-from apps.pages.models import Page
+from .models import Block, BlockAttachment, BlockVersion
+from .serializers import (
+    BlockSerializer,
+    BlockAttachmentSerializer,
+    BlockVersionSerializer,
+    BlockMoveSerializer,
+    BlockBulkUpdateSerializer
+)
+from apps.workspaces.permissions import IsWorkspaceMember, CanEditWorkspace
 
 class BlockViewSet(viewsets.ModelViewSet):
     serializer_class = BlockSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsWorkspaceMember]
 
     def get_queryset(self):
         return Block.objects.filter(
-            page__workspace__workspacemember__user=self.request.user
-        ).distinct()
-
-    def get_serializer_class(self):
-        if self.action in ['retrieve', 'create', 'update']:
-            return BlockDetailSerializer
-        return BlockSerializer
+            page__workspace__slug=self.kwargs['workspace_slug'],
+            page__slug=self.kwargs['page_slug']
+        ).prefetch_related('children')
 
     def perform_create(self, serializer):
-        page = get_object_or_404(Page, id=self.request.data.get('page'))
-        # Check if user has permission to edit the page
-        WorkspaceMember.objects.get(
-            workspace=page.workspace,
-            user=self.request.user,
-            role__in=['admin', 'editor']
+        page = get_object_or_404(
+            Page,
+            workspace__slug=self.kwargs['workspace_slug'],
+            slug=self.kwargs['page_slug']
         )
-        serializer.save(created_by=self.request.user, page=page)
-
-    @action(detail=True, methods=['post'])
-    def move(self, request, pk=None):
-        block = self.get_object()
-        new_position = request.data.get('position')
-        
-        if new_position is None:
-            return Response(
-                {'error': 'Position is required'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        try:
-            block.move_to(new_position)
-            return Response(self.get_serializer(block).data)
-        except ValueError as e:
-            return Response(
-                {'error': str(e)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-    @action(detail=True, methods=['post'])
-    def duplicate(self, request, pk=None):
-        original_block = self.get_object()
-        new_block = Block.objects.create(
-            page=original_block.page,
-            type=original_block.type,
-            content=original_block.content,
-            created_by=request.user,
-            position=original_block.position + 1
+        serializer.save(
+            page=page,
+            created_by=self.request.user,
+            last_edited_by=self.request.user
         )
-        
-        # Shift subsequent blocks
-        Block.objects.filter(
-            page=original_block.page,
-            position__gt=original_block.position
-        ).exclude(id=new_block.id).update(position=F('position') + 1)
-        
-        return Response(self.get_serializer(new_block).data)
+
+    def perform_update(self, serializer):
+        serializer.save(last_edited_by=self.request.user)
 
     @action(detail=True, methods=['post'])
-    def convert(self, request, pk=None):
+    def move(self, request, workspace_slug=None, page_slug=None, pk=None):
         block = self.get_object()
-        new_type = request.data.get('type')
+        serializer = BlockMoveSerializer(data=request.data)
         
-        if not new_type:
-            return Response(
-                {'error': 'New block type is required'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        if serializer.is_valid():
+            target_page_id = serializer.validated_data.get('target_page_id')
+            target_parent_id = serializer.validated_data.get('target_parent_id')
+            order = serializer.validated_data.get('order')
+            
+            if target_page_id:
+                block.page_id = target_page_id
+            if target_parent_id is not None:
+                block.parent_id = target_parent_id
+            block.order = order
+            block.save()
+            
+            return Response(BlockSerializer(block).data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            block.convert_to(new_type)
-            return Response(self.get_serializer(block).data)
-        except ValueError as e:
-            return Response(
-                {'error': str(e)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-    @action(detail=True, methods=['post'])
-    def upload_attachment(self, request, pk=None):
-        block = self.get_object()
+    @action(detail=False, methods=['post'])
+    def bulk_update(self, request, workspace_slug=None, page_slug=None):
+        serializer = BlockBulkUpdateSerializer(data=request.data)
         
-        if not request.FILES.get('file'):
+        if serializer.is_valid():
+            blocks_data = serializer.validated_data['blocks']
+            updated_blocks = []
+            
+            for block_data in blocks_data:
+                block_id = block_data.pop('id')
+                block = get_object_or_404(Block, id=block_id)
+                for key, value in block_data.items():
+                    setattr(block, key, value)
+                block.last_edited_by = request.user
+                block.save()
+                updated_blocks.append(block)
+            
             return Response(
-                {'error': 'File is required'},
-                status=status.HTTP_400_BAD_REQUEST
+                BlockSerializer(updated_blocks, many=True).data
             )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            attachment = block.add_attachment(
-                file=request.FILES['file'],
-                user=request.user
-            )
-            return Response({
-                'url': attachment.file.url,
-                'filename': attachment.filename,
-                'content_type': attachment.content_type
-            })
-        except Exception as e:
-            return Response(
-                {'error': str(e)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+class BlockAttachmentViewSet(viewsets.ModelViewSet):
+    serializer_class = BlockAttachmentSerializer
+    permission_classes = [permissions.IsAuthenticated, CanEditWorkspace]
 
-    @action(detail=True, methods=['get'])
-    def version_history(self, request, pk=None):
-        block = self.get_object()
-        versions = block.version_set.all().order_by('-created_at')
-        return Response([{
-            'id': version.id,
-            'content': version.content,
-            'created_at': version.created_at,
-            'created_by': {
-                'id': version.created_by.id,
-                'email': version.created_by.email,
-                'name': version.created_by.get_full_name()
-            }
-        } for version in versions])
+    def get_queryset(self):
+        return BlockAttachment.objects.filter(
+            block__page__workspace__slug=self.kwargs['workspace_slug'],
+            block__page__slug=self.kwargs['page_slug'],
+            block_id=self.kwargs['block_pk']
+        )
 
-    @action(detail=True, methods=['post'])
-    def restore_version(self, request, pk=None):
-        block = self.get_object()
-        version_id = request.data.get('version_id')
-        
-        if not version_id:
-            return Response(
-                {'error': 'Version ID is required'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+    def perform_create(self, serializer):
+        block = get_object_or_404(Block, id=self.kwargs['block_pk'])
+        serializer.save(block=block, uploaded_by=self.request.user)
 
-        try:
-            block.restore_version(version_id, request.user)
-            return Response(self.get_serializer(block).data)
-        except Exception as e:
-            return Response(
-                {'error': str(e)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+class BlockVersionViewSet(viewsets.ModelViewSet):
+    serializer_class = BlockVersionSerializer
+    permission_classes = [permissions.IsAuthenticated, IsWorkspaceMember]
+
+    def get_queryset(self):
+        return BlockVersion.objects.filter(
+            block__page__workspace__slug=self.kwargs['workspace_slug'],
+            block__page__slug=self.kwargs['page_slug'],
+            block_id=self.kwargs['block_pk']
+        )
+
+    def perform_create(self, serializer):
+        block = get_object_or_404(Block, id=self.kwargs['block_pk'])
+        serializer.save(block=block, created_by=self.request.user)

@@ -1,52 +1,80 @@
-from rest_framework import status, viewsets
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
 from django.contrib.auth import get_user_model
-from .serializers import UserSerializer, LoginSerializer
-from .models import EmailVerification
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import update_session_auth_hash
+from .serializers import (
+    UserSerializer,
+    RegisterSerializer,
+    UserProfileSerializer,
+    ChangePasswordSerializer,
+    ResetPasswordEmailSerializer,
+    UpdateUserSerializer
+)
+from .models import UserProfile
 
 User = get_user_model()
 
-class AuthViewSet(viewsets.GenericViewSet):
+class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = RegisterSerializer
+
+class UserProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
-    permission_classes = [AllowAny]
+    permission_classes = (permissions.IsAuthenticated,)
 
-    @action(detail=False, methods=['post'])
-    def register(self, request):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def get_object(self):
+        return self.request.user
 
-    @action(detail=False, methods=['post'])
-    def login(self, request):
-        serializer = LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token = serializer.validated_data['token']
-        return Response({
-            'user': UserSerializer(user).data,
-            'token': token
-        })
+class LogoutView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
 
-    @action(detail=False, methods=['post'])
-    def verify_email(self, request):
-        token = request.data.get('token')
+    def post(self, request):
         try:
-            verification = EmailVerification.objects.get(
-                token=token,
-                is_used=False
-            )
-            user = verification.user
-            user.is_verified = True
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class ChangePasswordView(generics.UpdateAPIView):
+    serializer_class = ChangePasswordSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self):
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        user = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            if not user.check_password(serializer.data.get("old_password")):
+                return Response({"old_password": ["Wrong password."]}, 
+                              status=status.HTTP_400_BAD_REQUEST)
+            
+            user.set_password(serializer.data.get("new_password"))
             user.save()
-            verification.is_used = True
-            verification.save()
-            return Response({'message': 'Email verified successfully'})
-        except EmailVerification.DoesNotExist:
-            return Response(
-                {'error': 'Invalid token'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            update_session_auth_hash(request, user)
+            return Response(status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UpdateProfileView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = UpdateUserSerializer
+
+    def get_object(self):
+        return self.request.user
+
+class UserProfileSettingsView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserProfileSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self):
+        profile, created = UserProfile.objects.get_or_create(user=self.request.user)
+        return profile
