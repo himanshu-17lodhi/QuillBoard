@@ -12,7 +12,7 @@ from .views import (
     UserProfileSettingsView,
 )
 
-app_name = 'authentication'
+app_name = 'apps.authentication'
 
 urlpatterns = [
     # JWT Token URLs

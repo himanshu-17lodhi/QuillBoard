@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import Block
-from .serializers import BlockSerializer, BlockDetailSerializer
+from .serializers import BlockSerializer
 from apps.workspaces.models import WorkspaceMember
 from apps.pages.models import Page
 
@@ -16,10 +16,10 @@ class BlockViewSet(viewsets.ModelViewSet):
             page__workspace__workspacemember__user=self.request.user
         ).distinct()
 
-    def get_serializer_class(self):
-        if self.action in ['retrieve', 'create', 'update']:
-            return BlockDetailSerializer
-        return BlockSerializer
+    # def get_serializer_class(self):
+    #     if self.action in ['retrieve', 'create', 'update']:
+    #         return BlockDetailSerializer
+    #     return BlockSerializer
 
     def perform_create(self, serializer):
         page = get_object_or_404(Page, id=self.request.data.get('page'))

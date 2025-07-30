@@ -1,0 +1,140 @@
+INFO 2025-07-31 01:26:39,073 autoreload 9448 5476 Watching for file changes with StatReloader
+INFO 2025-07-31 01:32:03,169 autoreload 17412 23984 Watching for file changes with StatReloader
+INFO 2025-07-31 01:35:56,988 autoreload 17412 23984 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 01:35:58,084 autoreload 14504 22628 Watching for file changes with StatReloader
+INFO 2025-07-31 01:36:02,456 autoreload 14504 22628 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 01:36:03,474 autoreload 8560 4852 Watching for file changes with StatReloader
+INFO 2025-07-31 01:37:27,860 autoreload 8560 4852 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 01:37:28,688 autoreload 9272 12424 Watching for file changes with StatReloader
+INFO 2025-07-31 01:54:13,379 autoreload 19212 2308 Watching for file changes with StatReloader
+INFO 2025-07-31 01:55:58,771 autoreload 19212 2308 E:\QuillBoard\apps\authentication\apps.py changed, reloading.
+INFO 2025-07-31 01:55:59,720 autoreload 19324 2724 Watching for file changes with StatReloader
+INFO 2025-07-31 01:56:43,503 autoreload 19324 2724 E:\QuillBoard\apps\pages\apps.py changed, reloading.
+INFO 2025-07-31 01:56:44,673 autoreload 22360 20200 Watching for file changes with StatReloader
+INFO 2025-07-31 01:57:29,370 autoreload 23524 15788 Watching for file changes with StatReloader
+INFO 2025-07-31 01:58:18,328 autoreload 23524 15788 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 01:58:20,484 autoreload 8920 24048 Watching for file changes with StatReloader
+INFO 2025-07-31 01:58:37,026 autoreload 23680 3744 Watching for file changes with StatReloader
+INFO 2025-07-31 02:00:18,636 autoreload 23680 3744 E:\QuillBoard\apps\authentication\managers.py changed, reloading.
+INFO 2025-07-31 02:00:20,135 autoreload 24092 13240 Watching for file changes with StatReloader
+INFO 2025-07-31 02:00:42,247 autoreload 10696 13332 Watching for file changes with StatReloader
+INFO 2025-07-31 02:01:33,793 autoreload 10696 13332 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 02:01:35,079 autoreload 3712 20000 Watching for file changes with StatReloader
+INFO 2025-07-31 02:01:52,295 autoreload 16192 18820 Watching for file changes with StatReloader
+INFO 2025-07-31 02:02:34,009 autoreload 16192 18820 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 02:02:35,084 autoreload 21476 14820 Watching for file changes with StatReloader
+INFO 2025-07-31 02:03:01,618 autoreload 8572 14896 Watching for file changes with StatReloader
+INFO 2025-07-31 02:06:07,840 autoreload 8572 14896 E:\QuillBoard\apps\authentication\models.py changed, reloading.
+INFO 2025-07-31 02:06:09,497 autoreload 19044 15876 Watching for file changes with StatReloader
+INFO 2025-07-31 02:06:19,620 autoreload 19044 15876 E:\QuillBoard\apps\authentication\signals.py changed, reloading.
+INFO 2025-07-31 02:06:20,798 autoreload 10552 19032 Watching for file changes with StatReloader
+INFO 2025-07-31 02:06:41,781 autoreload 7316 10032 Watching for file changes with StatReloader
+INFO 2025-07-31 02:15:54,912 autoreload 7316 10032 E:\QuillBoard\apps\workspaces\models.py changed, reloading.
+INFO 2025-07-31 02:15:57,107 autoreload 19000 18708 Watching for file changes with StatReloader
+INFO 2025-07-31 02:16:13,052 autoreload 19000 18708 E:\QuillBoard\apps\workspaces\views.py changed, reloading.
+INFO 2025-07-31 02:16:15,001 autoreload 5936 1672 Watching for file changes with StatReloader
+INFO 2025-07-31 02:17:40,883 autoreload 5936 1672 E:\QuillBoard\apps\workspaces\models.py changed, reloading.
+INFO 2025-07-31 02:17:43,090 autoreload 5332 15152 Watching for file changes with StatReloader
+INFO 2025-07-31 02:18:05,965 autoreload 5332 15152 E:\QuillBoard\apps\workspaces\views.py changed, reloading.
+INFO 2025-07-31 02:18:07,322 autoreload 13716 19096 Watching for file changes with StatReloader
+INFO 2025-07-31 02:18:18,547 autoreload 13716 19096 E:\QuillBoard\apps\workspaces\permissions.py changed, reloading.
+INFO 2025-07-31 02:18:19,680 autoreload 11908 3748 Watching for file changes with StatReloader
+INFO 2025-07-31 02:18:30,416 autoreload 11908 3748 E:\QuillBoard\apps\workspaces\urls.py changed, reloading.
+INFO 2025-07-31 02:18:31,910 autoreload 2168 4300 Watching for file changes with StatReloader
+INFO 2025-07-31 02:19:03,691 autoreload 2168 4300 E:\QuillBoard\apps\workspaces\apps.py changed, reloading.
+INFO 2025-07-31 02:19:04,963 autoreload 6380 8152 Watching for file changes with StatReloader
+INFO 2025-07-31 02:19:10,051 autoreload 6380 8152 E:\QuillBoard\apps\workspaces\apps.py changed, reloading.
+INFO 2025-07-31 02:19:11,179 autoreload 13876 23564 Watching for file changes with StatReloader
+INFO 2025-07-31 02:19:49,983 autoreload 19348 19184 Watching for file changes with StatReloader
+INFO 2025-07-31 02:25:20,727 autoreload 19348 19184 E:\QuillBoard\apps\pages\serializers.py changed, reloading.
+INFO 2025-07-31 02:25:22,206 autoreload 20456 12400 Watching for file changes with StatReloader
+INFO 2025-07-31 02:27:39,941 autoreload 20456 12400 E:\QuillBoard\apps\workspaces\apps.py changed, reloading.
+INFO 2025-07-31 02:27:41,196 autoreload 11060 15972 Watching for file changes with StatReloader
+INFO 2025-07-31 02:27:46,442 autoreload 11060 15972 E:\QuillBoard\apps\workspaces\apps.py changed, reloading.
+INFO 2025-07-31 02:27:47,626 autoreload 18164 10616 Watching for file changes with StatReloader
+INFO 2025-07-31 02:27:59,829 autoreload 18164 10616 E:\QuillBoard\apps\workspaces\apps.py changed, reloading.
+INFO 2025-07-31 02:28:01,335 autoreload 14096 17004 Watching for file changes with StatReloader
+INFO 2025-07-31 02:28:36,185 autoreload 14096 17004 E:\QuillBoard\apps\workspaces\apps.py changed, reloading.
+INFO 2025-07-31 02:28:37,716 autoreload 2592 22800 Watching for file changes with StatReloader
+INFO 2025-07-31 02:28:53,086 autoreload 2592 22800 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 02:28:54,155 autoreload 18544 18596 Watching for file changes with StatReloader
+INFO 2025-07-31 02:29:34,151 autoreload 18544 18596 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 02:29:35,455 autoreload 22324 10036 Watching for file changes with StatReloader
+INFO 2025-07-31 02:29:46,290 autoreload 22324 10036 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 02:29:47,453 autoreload 17164 12252 Watching for file changes with StatReloader
+INFO 2025-07-31 02:30:04,568 autoreload 17164 12252 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 02:30:05,986 autoreload 19156 17672 Watching for file changes with StatReloader
+INFO 2025-07-31 02:30:11,374 autoreload 19156 17672 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 02:30:12,555 autoreload 20904 19200 Watching for file changes with StatReloader
+INFO 2025-07-31 02:30:15,479 autoreload 20904 19200 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 02:30:17,014 autoreload 24052 15028 Watching for file changes with StatReloader
+INFO 2025-07-31 02:30:27,487 autoreload 24052 15028 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 02:30:28,949 autoreload 16580 3048 Watching for file changes with StatReloader
+INFO 2025-07-31 02:30:36,470 autoreload 16580 3048 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 02:30:37,718 autoreload 23648 8940 Watching for file changes with StatReloader
+INFO 2025-07-31 02:30:51,747 autoreload 23648 8940 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 02:30:53,133 autoreload 3028 14140 Watching for file changes with StatReloader
+INFO 2025-07-31 02:31:37,809 autoreload 9228 24420 Watching for file changes with StatReloader
+INFO 2025-07-31 02:33:18,428 autoreload 9228 24420 E:\QuillBoard\apps\workspaces\permissions.py changed, reloading.
+INFO 2025-07-31 02:33:20,364 autoreload 23280 23328 Watching for file changes with StatReloader
+INFO 2025-07-31 02:33:47,173 autoreload 23280 23328 E:\QuillBoard\apps\workspaces\views.py changed, reloading.
+INFO 2025-07-31 02:33:48,555 autoreload 15692 24256 Watching for file changes with StatReloader
+INFO 2025-07-31 02:35:16,007 autoreload 15692 24256 E:\QuillBoard\apps\workspaces\views.py changed, reloading.
+INFO 2025-07-31 02:35:17,357 autoreload 2788 20528 Watching for file changes with StatReloader
+INFO 2025-07-31 02:35:38,493 autoreload 2788 20528 E:\QuillBoard\apps\workspaces\views.py changed, reloading.
+INFO 2025-07-31 02:35:39,732 autoreload 11720 1552 Watching for file changes with StatReloader
+INFO 2025-07-31 02:35:54,817 autoreload 11720 1552 E:\QuillBoard\apps\workspaces\views.py changed, reloading.
+INFO 2025-07-31 02:35:56,072 autoreload 12660 22328 Watching for file changes with StatReloader
+INFO 2025-07-31 02:39:03,669 autoreload 12660 22328 E:\QuillBoard\apps\workspaces\signals.py changed, reloading.
+INFO 2025-07-31 02:39:05,103 autoreload 11248 1372 Watching for file changes with StatReloader
+INFO 2025-07-31 02:39:42,359 autoreload 11248 1372 E:\QuillBoard\apps\workspaces\signals.py changed, reloading.
+INFO 2025-07-31 02:39:43,545 autoreload 20612 24260 Watching for file changes with StatReloader
+INFO 2025-07-31 02:40:04,422 autoreload 20612 24260 E:\QuillBoard\apps\workspaces\apps.py changed, reloading.
+INFO 2025-07-31 02:40:05,764 autoreload 17196 19752 Watching for file changes with StatReloader
+INFO 2025-07-31 02:40:58,156 autoreload 17196 19752 E:\QuillBoard\apps\workspaces\apps.py changed, reloading.
+INFO 2025-07-31 02:41:01,682 autoreload 15992 692 Watching for file changes with StatReloader
+INFO 2025-07-31 02:41:29,085 autoreload 15992 692 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 02:41:30,172 autoreload 20896 14192 Watching for file changes with StatReloader
+INFO 2025-07-31 02:41:31,424 autoreload 20896 14192 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 02:41:32,340 autoreload 5656 17056 Watching for file changes with StatReloader
+INFO 2025-07-31 02:42:25,867 autoreload 13956 22796 Watching for file changes with StatReloader
+INFO 2025-07-31 02:43:59,734 autoreload 13956 22796 E:\QuillBoard\apps\workspaces\apps.py changed, reloading.
+INFO 2025-07-31 02:44:00,634 autoreload 17008 19680 Watching for file changes with StatReloader
+INFO 2025-07-31 02:44:09,407 autoreload 17008 19680 E:\QuillBoard\apps\workspaces\apps.py changed, reloading.
+INFO 2025-07-31 02:44:10,457 autoreload 12444 18708 Watching for file changes with StatReloader
+INFO 2025-07-31 02:44:33,531 autoreload 12444 18708 E:\QuillBoard\QuillBoard\settings.py changed, reloading.
+INFO 2025-07-31 02:44:34,580 autoreload 18228 15728 Watching for file changes with StatReloader
+INFO 2025-07-31 02:45:14,561 autoreload 17800 5460 Watching for file changes with StatReloader
+INFO 2025-07-31 02:50:35,190 autoreload 19020 6532 Watching for file changes with StatReloader
+INFO 2025-07-31 02:51:37,377 autoreload 19020 6532 E:\QuillBoard\apps\workspaces\views.py changed, reloading.
+INFO 2025-07-31 02:51:39,076 autoreload 17812 15820 Watching for file changes with StatReloader
+INFO 2025-07-31 02:53:01,018 autoreload 21800 8052 Watching for file changes with StatReloader
+INFO 2025-07-31 02:54:17,099 autoreload 21800 8052 E:\QuillBoard\apps\workspaces\permissions.py changed, reloading.
+INFO 2025-07-31 02:54:18,560 autoreload 17020 15152 Watching for file changes with StatReloader
+INFO 2025-07-31 02:54:32,802 autoreload 5828 15984 Watching for file changes with StatReloader
+INFO 2025-07-31 02:56:34,573 autoreload 5828 15984 E:\QuillBoard\apps\workspaces\views.py changed, reloading.
+INFO 2025-07-31 02:56:35,782 autoreload 19196 23680 Watching for file changes with StatReloader
+INFO 2025-07-31 02:57:42,308 autoreload 19196 23680 E:\QuillBoard\apps\blocks\views.py changed, reloading.
+INFO 2025-07-31 02:57:43,963 autoreload 22936 19452 Watching for file changes with StatReloader
+INFO 2025-07-31 02:59:06,769 autoreload 22936 19452 E:\QuillBoard\apps\authentication\urls.py changed, reloading.
+INFO 2025-07-31 02:59:08,408 autoreload 4300 11504 Watching for file changes with StatReloader
+INFO 2025-07-31 03:01:28,683 autoreload 4300 11504 E:\QuillBoard\apps\authentication\views.py changed, reloading.
+INFO 2025-07-31 03:01:30,685 autoreload 20484 23208 Watching for file changes with StatReloader
+INFO 2025-07-31 03:06:44,836 autoreload 20484 23208 E:\QuillBoard\apps\blocks\views.py changed, reloading.
+INFO 2025-07-31 03:06:46,303 autoreload 19800 1860 Watching for file changes with StatReloader
+INFO 2025-07-31 03:06:55,646 autoreload 19800 1860 E:\QuillBoard\apps\blocks\views.py changed, reloading.
+INFO 2025-07-31 03:06:56,749 autoreload 21812 2488 Watching for file changes with StatReloader
+INFO 2025-07-31 03:08:30,072 autoreload 24196 2108 Watching for file changes with StatReloader
+INFO 2025-07-31 03:08:55,887 autoreload 24196 2108 E:\QuillBoard\apps\blocks\views.py changed, reloading.
+INFO 2025-07-31 03:08:57,704 autoreload 12728 15020 Watching for file changes with StatReloader
+INFO 2025-07-31 03:15:15,330 autoreload 12728 15020 E:\QuillBoard\apps\blocks\views.py changed, reloading.
+INFO 2025-07-31 03:15:16,769 autoreload 24328 18544 Watching for file changes with StatReloader
+INFO 2025-07-31 03:15:27,313 autoreload 24328 18544 E:\QuillBoard\apps\blocks\views.py changed, reloading.
+INFO 2025-07-31 03:15:28,431 autoreload 20468 3208 Watching for file changes with StatReloader
+INFO 2025-07-31 03:19:38,410 autoreload 15500 9532 Watching for file changes with StatReloader
+INFO 2025-07-31 03:21:00,262 autoreload 15500 9532 E:\QuillBoard\apps\blocks\views.py changed, reloading.
+INFO 2025-07-31 03:21:01,784 autoreload 8808 20556 Watching for file changes with StatReloader
+INFO 2025-07-31 03:21:06,115 autoreload 8808 20556 E:\QuillBoard\apps\blocks\views.py changed, reloading.
+INFO 2025-07-31 03:21:07,728 autoreload 1664 21580 Watching for file changes with StatReloader
+INFO 2025-07-31 03:21:57,307 autoreload 1664 21580 E:\QuillBoard\apps\blocks\views.py changed, reloading.
+INFO 2025-07-31 03:21:58,738 autoreload 19652 23920 Watching for file changes with StatReloader

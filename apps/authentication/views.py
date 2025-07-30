@@ -9,7 +9,6 @@ from .serializers import (
     RegisterSerializer,
     UserProfileSerializer,
     ChangePasswordSerializer,
-    ResetPasswordEmailSerializer,
     UpdateUserSerializer
 )
 from .models import UserProfile

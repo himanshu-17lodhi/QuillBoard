@@ -1,27 +1,60 @@
 from rest_framework import permissions
+from apps.workspaces.models import WorkspaceMember
 
-class IsWorkspaceAdmin(permissions.BasePermission):
-    def has_permission(self, request, view):
-        workspace_slug = view.kwargs.get('workspace_slug')
-        if not workspace_slug:
-            return False
-        return request.user.workspaces.filter(
-            slug=workspace_slug,
-            workspacemember__role='admin'
-        ).exists()
 
 class IsWorkspaceMember(permissions.BasePermission):
+    """
+    Allows access only to members of the workspace.
+    """
+
     def has_permission(self, request, view):
-        workspace_slug = view.kwargs.get('workspace_slug')
-        if not workspace_slug:
+        workspace_id = view.kwargs.get('workspace_id') or request.data.get('workspace')
+        if not workspace_id:
             return False
-        return request.user.workspaces.filter(slug=workspace_slug).exists()
+        return WorkspaceMember.objects.filter(
+            user=request.user,
+            workspace_id=workspace_id
+        ).exists()
+
 
 class CanEditWorkspace(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
+    """
+    Custom permission to allow only workspace admins or editors to perform write actions.
+    """
+
+    def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return obj.members.filter(
-            workspacemember__user=request.user,
-            workspacemember__role__in=['admin', 'editor']
-        ).exists()
+
+        workspace_id = view.kwargs.get('workspace_id') or request.data.get('workspace')
+        if not workspace_id:
+            return False
+
+        try:
+            membership = WorkspaceMember.objects.get(
+                user=request.user,
+                workspace_id=workspace_id
+            )
+            return membership.role in ['admin', 'editor']
+        except WorkspaceMember.DoesNotExist:
+            return False
+
+
+class IsWorkspaceAdmin(permissions.BasePermission):
+    """
+    Allows access only to workspace admins.
+    """
+
+    def has_permission(self, request, view):
+        workspace_id = view.kwargs.get('workspace_id') or request.data.get('workspace')
+        if not workspace_id:
+            return False
+
+        try:
+            membership = WorkspaceMember.objects.get(
+                user=request.user,
+                workspace_id=workspace_id
+            )
+            return membership.role == 'admin'
+        except WorkspaceMember.DoesNotExist:
+            return False
