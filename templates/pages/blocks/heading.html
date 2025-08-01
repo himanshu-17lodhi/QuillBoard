@@ -1,0 +1,47 @@
+<div class="flex group">
+    <div class="block-handle mr-2 opacity-0 group-hover:opacity-100">
+        <i class="fas fa-grip-vertical text-gray-400 cursor-grab"></i>
+    </div>
+    <div class="flex-1">
+        {% with level=block.content.level|default:1 %}
+            {% if level == 1 %}
+                <h1 contenteditable="{% if membership.can_edit %}true{% else %}false{% endif %}"
+                   class="text-3xl font-bold outline-none leading-tight"
+                   data-placeholder="Heading 1"
+                   onblur="updateHeadingContent(this, '{{ block.id }}', 1)">{{ block.content.text|default:"" }}</h1>
+            {% elif level == 2 %}
+                <h2 contenteditable="{% if membership.can_edit %}true{% else %}false{% endif %}"
+                   class="text-2xl font-bold outline-none leading-tight"
+                   data-placeholder="Heading 2"
+                   onblur="updateHeadingContent(this, '{{ block.id }}', 2)">{{ block.content.text|default:"" }}</h2>
+            {% elif level == 3 %}
+                <h3 contenteditable="{% if membership.can_edit %}true{% else %}false{% endif %}"
+                   class="text-xl font-bold outline-none leading-tight"
+                   data-placeholder="Heading 3"
+                   onblur="updateHeadingContent(this, '{{ block.id }}', 3)">{{ block.content.text|default:"" }}</h3>
+            {% else %}
+                <h4 contenteditable="{% if membership.can_edit %}true{% else %}false{% endif %}"
+                   class="text-lg font-semibold outline-none leading-tight"
+                   data-placeholder="Heading"
+                   onblur="updateHeadingContent(this, '{{ block.id }}', {{ level }})">{{ block.content.text|default:"" }}</h4>
+            {% endif %}
+        {% endwith %}
+    </div>
+    {% if membership.can_edit %}
+        <div class="block-actions opacity-0 group-hover:opacity-100 ml-2 flex items-start pt-1">
+            <select onchange="changeHeadingLevel('{{ block.id }}', this.value)" 
+                    class="text-xs border border-gray-300 rounded px-1 mr-1">
+                <option value="1" {% if block.content.level == 1 %}selected{% endif %}>H1</option>
+                <option value="2" {% if block.content.level == 2 %}selected{% endif %}>H2</option>
+                <option value="3" {% if block.content.level == 3 %}selected{% endif %}>H3</option>
+                <option value="4" {% if block.content.level == 4 %}selected{% endif %}>H4</option>
+            </select>
+            <button onclick="duplicateBlock('{{ block.id }}')" class="text-gray-400 hover:text-gray-600 p-1">
+                <i class="fas fa-copy text-xs"></i>
+            </button>
+            <button onclick="deleteBlock('{{ block.id }}')" class="text-gray-400 hover:text-red-600 p-1">
+                <i class="fas fa-trash text-xs"></i>
+            </button>
+        </div>
+    {% endif %}
+</div>

@@ -23,12 +23,26 @@ def workspace_create(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         description = request.POST.get('description', '')
+        icon = request.POST.get('icon', '')
+        
+        # Generate a unique slug
+        import re
+        base_slug = re.sub(r'[^a-zA-Z0-9\-]', '-', name.lower())
+        base_slug = re.sub(r'-+', '-', base_slug).strip('-')
+        
+        # Ensure slug uniqueness
+        slug = base_slug
+        counter = 1
+        while Workspace.objects.filter(slug=slug).exists():
+            slug = f"{base_slug}-{counter}"
+            counter += 1
         
         # Create workspace
         workspace = Workspace.objects.create(
             name=name,
             description=description,
-            slug=name.lower().replace(' ', '-'),  # Simple slug generation
+            slug=slug,
+            icon=icon,
             created_by=request.user
         )
         

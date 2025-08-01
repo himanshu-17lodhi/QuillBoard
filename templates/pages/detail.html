@@ -1,0 +1,546 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page.title }} - {{ workspace.name }}{% endblock %}
+
+{% block main_class %}{% endblock %}
+
+{% block content %}
+<div class="flex h-screen bg-gray-50">
+    <!-- Sidebar -->
+    <div class="w-64 bg-white border-r border-gray-200 flex flex-col sidebar-transition">
+        <!-- Workspace Header -->
+        <div class="p-4 border-b border-gray-200">
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
+                    {% if workspace.icon %}
+                        <span class="text-lg">{{ workspace.icon }}</span>
+                    {% else %}
+                        <i class="fas fa-layer-group text-indigo-600"></i>
+                    {% endif %}
+                </div>
+                <div>
+                    <h1 class="font-semibold text-gray-900 text-sm">{{ workspace.name }}</h1>
+                    <p class="text-xs text-gray-500">{{ membership.get_role_display }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Page Navigation -->
+        <div class="flex-1 overflow-y-auto p-4">
+            <div class="mb-4">
+                <a href="{% url 'workspaces:detail' workspace.slug %}" 
+                   class="text-gray-600 hover:text-indigo-600 text-sm">
+                    <i class="fas fa-arrow-left mr-2"></i>Back to {{ workspace.name }}
+                </a>
+            </div>
+            
+            <!-- Page Actions -->
+            {% if membership.can_edit %}
+                <div class="space-y-2 mb-4">
+                    <button onclick="duplicatePage()" class="w-full text-left p-2 text-gray-600 hover:bg-gray-100 rounded-md text-sm">
+                        <i class="fas fa-copy mr-2"></i>Duplicate
+                    </button>
+                    <button onclick="movePage()" class="w-full text-left p-2 text-gray-600 hover:bg-gray-100 rounded-md text-sm">
+                        <i class="fas fa-arrows-alt mr-2"></i>Move
+                    </button>
+                    <button onclick="deletePage()" class="w-full text-left p-2 text-red-600 hover:bg-red-50 rounded-md text-sm">
+                        <i class="fas fa-trash mr-2"></i>Delete
+                    </button>
+                </div>
+            {% endif %}
+            
+            <!-- Page Info -->
+            <div class="text-xs text-gray-500 space-y-1">
+                <div>Created {{ page.created_at|date:"M j, Y" }}</div>
+                <div>Updated {{ page.updated_at|date:"M j, Y" }}</div>
+                <div>{{ blocks|length }} block{{ blocks|length|pluralize }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Page Header -->
+        <div class="bg-white border-b border-gray-200 p-6">
+            <div class="max-w-4xl mx-auto">
+                <!-- Page Icon and Title -->
+                <div class="flex items-start space-x-4">
+                    <div class="page-icon-container">
+                        {% if page.icon %}
+                            <span class="text-4xl cursor-pointer hover:bg-gray-100 p-2 rounded" 
+                                  onclick="editPageIcon()">{{ page.icon }}</span>
+                        {% else %}
+                            <div class="w-12 h-12 bg-gray-100 rounded cursor-pointer hover:bg-gray-200 flex items-center justify-center"
+                                 onclick="editPageIcon()">
+                                <i class="fas fa-smile text-gray-400"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="flex-1">
+                        <h1 class="page-title text-3xl font-bold text-gray-900 outline-none border-none bg-transparent resize-none"
+                            contenteditable="{% if membership.can_edit %}true{% else %}false{% endif %}"
+                            data-placeholder="Untitled"
+                            onblur="updatePageTitle(this)">{{ page.title }}</h1>
+                        
+                        <!-- Page Properties -->
+                        <div class="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                            <div class="flex items-center">
+                                <i class="fas fa-user mr-1"></i>
+                                {{ page.created_by.username }}
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-clock mr-1"></i>
+                                Last edited {{ page.updated_at|timesince }} ago
+                            </div>
+                            {% if page.is_published %}
+                                <div class="flex items-center text-green-600">
+                                    <i class="fas fa-globe mr-1"></i>
+                                    Published
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Page Actions -->
+                    <div class="flex items-center space-x-2">
+                        {% if membership.can_edit %}
+                            <button onclick="togglePublish()" 
+                                    class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50">
+                                {% if page.is_published %}Unpublish{% else %}Publish{% endif %}
+                            </button>
+                        {% endif %}
+                        <button onclick="sharePage()" 
+                                class="px-3 py-1 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                            Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Page Content -->
+        <main class="flex-1 overflow-y-auto bg-white">
+            <div class="max-w-4xl mx-auto py-8 px-6">
+                <!-- Cover Image -->
+                {% if page.cover_image %}
+                    <div class="mb-8">
+                        <img src="{{ page.cover_image.url }}" alt="Cover" class="w-full h-64 object-cover rounded-lg">
+                    </div>
+                {% endif %}
+                
+                <!-- Blocks Container -->
+                <div id="blocks-container" class="space-y-2">
+                    {% for block in blocks %}
+                        <div class="notion-block" data-block-id="{{ block.id }}" data-block-type="{{ block.block_type }}">
+                            {% include 'pages/blocks/'|add:block.block_type|add:'.html' with block=block %}
+                        </div>
+                    {% endfor %}
+                    
+                    <!-- Empty state or add new block -->
+                    {% if membership.can_edit %}
+                        <div class="notion-block" id="add-block-area">
+                            <div class="flex items-center p-2 text-gray-400 hover:text-gray-600 cursor-pointer"
+                                 onclick="addNewBlock()">
+                                <div class="block-handle mr-2">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <span class="text-sm">Click here to add a block...</span>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Block Type Selector Modal -->
+<div id="blockTypeModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg max-w-2xl w-full p-6">
+            <h3 class="text-lg font-semibold mb-4">Choose a block type</h3>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <!-- Text Blocks -->
+                <div>
+                    <h4 class="font-medium text-gray-900 mb-2">Basic Blocks</h4>
+                    <div class="space-y-2">
+                        <button onclick="createBlock('text')" class="w-full text-left p-3 border border-gray-200 rounded hover:bg-gray-50">
+                            <div class="flex items-center">
+                                <i class="fas fa-font mr-3 text-gray-400"></i>
+                                <div>
+                                    <div class="font-medium">Text</div>
+                                    <div class="text-sm text-gray-500">Just start writing with plain text.</div>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="createBlock('heading')" class="w-full text-left p-3 border border-gray-200 rounded hover:bg-gray-50">
+                            <div class="flex items-center">
+                                <i class="fas fa-heading mr-3 text-gray-400"></i>
+                                <div>
+                                    <div class="font-medium">Heading</div>
+                                    <div class="text-sm text-gray-500">Big section heading.</div>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="createBlock('bullet_list')" class="w-full text-left p-3 border border-gray-200 rounded hover:bg-gray-50">
+                            <div class="flex items-center">
+                                <i class="fas fa-list-ul mr-3 text-gray-400"></i>
+                                <div>
+                                    <div class="font-medium">Bulleted list</div>
+                                    <div class="text-sm text-gray-500">Create a simple bulleted list.</div>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="createBlock('todo')" class="w-full text-left p-3 border border-gray-200 rounded hover:bg-gray-50">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-square mr-3 text-gray-400"></i>
+                                <div>
+                                    <div class="font-medium">To-do list</div>
+                                    <div class="text-sm text-gray-500">Track tasks with a to-do list.</div>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Media Blocks -->
+                <div>
+                    <h4 class="font-medium text-gray-900 mb-2">Media</h4>
+                    <div class="space-y-2">
+                        <button onclick="createBlock('image')" class="w-full text-left p-3 border border-gray-200 rounded hover:bg-gray-50">
+                            <div class="flex items-center">
+                                <i class="fas fa-image mr-3 text-gray-400"></i>
+                                <div>
+                                    <div class="font-medium">Image</div>
+                                    <div class="text-sm text-gray-500">Upload or embed with a link.</div>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="createBlock('embed')" class="w-full text-left p-3 border border-gray-200 rounded hover:bg-gray-50">
+                            <div class="flex items-center">
+                                <i class="fas fa-code mr-3 text-gray-400"></i>
+                                <div>
+                                    <div class="font-medium">Embed</div>
+                                    <div class="text-sm text-gray-500">Embed content from another site.</div>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="createBlock('divider')" class="w-full text-left p-3 border border-gray-200 rounded hover:bg-gray-50">
+                            <div class="flex items-center">
+                                <i class="fas fa-minus mr-3 text-gray-400"></i>
+                                <div>
+                                    <div class="font-medium">Divider</div>
+                                    <div class="text-sm text-gray-500">Visually divide blocks.</div>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="createBlock('callout')" class="w-full text-left p-3 border border-gray-200 rounded hover:bg-gray-50">
+                            <div class="flex items-center">
+                                <i class="fas fa-exclamation-triangle mr-3 text-gray-400"></i>
+                                <div>
+                                    <div class="font-medium">Callout</div>
+                                    <div class="text-sm text-gray-500">Make writing stand out.</div>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end mt-6">
+                <button onclick="closeModal('blockTypeModal')" 
+                        class="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // WebSocket connection for real-time collaboration
+    let pageWS = null;
+    if (window.location.protocol === 'https:') {
+        pageWS = new QuillBoardWS(`wss://${window.location.host}/ws/pages/{{ page.id }}/`);
+    } else {
+        pageWS = new QuillBoardWS(`ws://${window.location.host}/ws/pages/{{ page.id }}/`);
+    }
+    
+    // Override WebSocket message handler
+    pageWS.handleMessage = function(data) {
+        if (data.type === 'block_update') {
+            updateBlockFromWS(data);
+        } else if (data.type === 'page_update') {
+            updatePageFromWS(data);
+        } else if (data.type === 'cursor_position') {
+            showCursorPosition(data);
+        }
+    };
+    
+    // Initialize sortable for drag-and-drop
+    const blocksContainer = document.getElementById('blocks-container');
+    if (blocksContainer && {{ membership.can_edit|yesno:"true,false" }}) {
+        new Sortable(blocksContainer, {
+            handle: '.block-handle',
+            ghostClass: 'sortable-ghost',
+            chosenClass: 'sortable-chosen',
+            onEnd: function(evt) {
+                const blockId = evt.item.dataset.blockId;
+                const newOrder = evt.newIndex;
+                updateBlockOrder(blockId, newOrder);
+            }
+        });
+    }
+    
+    // Page functions
+    function updatePageTitle(element) {
+        const newTitle = element.textContent.trim() || 'Untitled';
+        if (newTitle !== '{{ page.title }}') {
+            pageWS.send({
+                type: 'page_update',
+                field: 'title',
+                value: newTitle,
+                timestamp: Date.now()
+            });
+        }
+    }
+    
+    function togglePublish() {
+        // Toggle publish status
+        fetch(`/api/pages/{{ page.id }}/`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                is_published: !{{ page.is_published|yesno:"true,false" }}
+            })
+        }).then(response => {
+            if (response.ok) {
+                location.reload();
+            }
+        });
+    }
+    
+    function addNewBlock() {
+        document.getElementById('blockTypeModal').classList.remove('hidden');
+    }
+    
+    function createBlock(blockType) {
+        const order = document.querySelectorAll('.notion-block').length;
+        
+        fetch(`/api/pages/{{ page.id }}/blocks/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                block_type: blockType,
+                content: getDefaultContent(blockType),
+                order: order
+            })
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        }).then(data => {
+            if (data) {
+                addBlockToDOM(data);
+                closeModal('blockTypeModal');
+            }
+        });
+    }
+    
+    function getDefaultContent(blockType) {
+        const defaults = {
+            'text': { text: '' },
+            'heading': { text: '', level: 1 },
+            'bullet_list': { text: '' },
+            'todo': { text: '', checked: false },
+            'image': { url: '', caption: '' },
+            'divider': {},
+            'callout': { text: '', icon: '💡' }
+        };
+        return defaults[blockType] || {};
+    }
+    
+    function addBlockToDOM(blockData) {
+        // Add new block to the DOM
+        const blocksContainer = document.getElementById('blocks-container');
+        const addBlockArea = document.getElementById('add-block-area');
+        
+        const blockElement = document.createElement('div');
+        blockElement.className = 'notion-block';
+        blockElement.dataset.blockId = blockData.id;
+        blockElement.dataset.blockType = blockData.block_type;
+        
+        // This would render the block based on its type
+        blockElement.innerHTML = renderBlock(blockData);
+        
+        blocksContainer.insertBefore(blockElement, addBlockArea);
+        
+        // Focus on the new block
+        const editableElement = blockElement.querySelector('[contenteditable="true"]');
+        if (editableElement) {
+            editableElement.focus();
+        }
+    }
+    
+    function renderBlock(blockData) {
+        // Simple block rendering - in a full implementation, this would be more sophisticated
+        switch (blockData.block_type) {
+            case 'text':
+                return `<div class="flex">
+                    <div class="block-handle mr-2 opacity-0"><i class="fas fa-grip-vertical text-gray-400"></i></div>
+                    <div class="flex-1">
+                        <div contenteditable="true" class="outline-none" data-placeholder="Type something...">${blockData.content.text || ''}</div>
+                    </div>
+                </div>`;
+            case 'heading':
+                return `<div class="flex">
+                    <div class="block-handle mr-2 opacity-0"><i class="fas fa-grip-vertical text-gray-400"></i></div>
+                    <div class="flex-1">
+                        <h${blockData.content.level || 1} contenteditable="true" class="font-bold outline-none" data-placeholder="Heading">${blockData.content.text || ''}</h${blockData.content.level || 1}>
+                    </div>
+                </div>`;
+            default:
+                return `<div class="flex">
+                    <div class="block-handle mr-2 opacity-0"><i class="fas fa-grip-vertical text-gray-400"></i></div>
+                    <div class="flex-1">Block type: ${blockData.block_type}</div>
+                </div>`;
+        }
+    }
+    
+    function updateBlockOrder(blockId, newOrder) {
+        fetch(`/api/blocks/${blockId}/move/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ order: newOrder })
+        });
+    }
+    
+    function updateBlockFromWS(data) {
+        const blockElement = document.querySelector(`[data-block-id="${data.block_id}"]`);
+        if (blockElement && data.user !== '{{ user.username }}') {
+            // Update block content from other users
+            const editableElement = blockElement.querySelector('[contenteditable="true"]');
+            if (editableElement) {
+                editableElement.innerHTML = data.content.text || '';
+            }
+        }
+    }
+    
+    function updatePageFromWS(data) {
+        if (data.user !== '{{ user.username }}') {
+            if (data.field === 'title') {
+                document.querySelector('.page-title').textContent = data.value;
+            }
+        }
+    }
+    
+    function showCursorPosition(data) {
+        // Show other users' cursor positions
+        console.log(`${data.user} is editing block ${data.block_id} at position ${data.position}`);
+    }
+    
+    // Auto-save content changes
+    document.addEventListener('input', debounce(function(e) {
+        if (e.target.contentEditable === 'true') {
+            const blockElement = e.target.closest('.notion-block');
+            if (blockElement) {
+                const blockId = blockElement.dataset.blockId;
+                const blockType = blockElement.dataset.blockType;
+                
+                let content = {};
+                if (blockType === 'text' || blockType === 'heading') {
+                    content.text = e.target.textContent;
+                    if (blockType === 'heading') {
+                        content.level = parseInt(e.target.tagName.charAt(1)) || 1;
+                    }
+                }
+                
+                // Send update via WebSocket
+                pageWS.send({
+                    type: 'block_update',
+                    block_id: blockId,
+                    content: content,
+                    timestamp: Date.now()
+                });
+            }
+        }
+    }, 500));
+    
+    // Utility functions
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+    }
+    
+    // Close modals when clicking outside
+    document.addEventListener('click', function(event) {
+        const modals = ['blockTypeModal'];
+        modals.forEach(modalId => {
+            const modal = document.getElementById(modalId);
+            if (event.target === modal) {
+                closeModal(modalId);
+            }
+        });
+    });
+    
+    // Placeholder behavior for empty contenteditable elements
+    document.addEventListener('focus', function(e) {
+        if (e.target.contentEditable === 'true' && e.target.textContent === '') {
+            e.target.classList.add('empty');
+        }
+    }, true);
+    
+    document.addEventListener('blur', function(e) {
+        if (e.target.contentEditable === 'true') {
+            e.target.classList.remove('empty');
+        }
+    }, true);
+</script>
+
+<style>
+    [contenteditable="true"]:empty:before {
+        content: attr(data-placeholder);
+        color: #9CA3AF;
+        font-style: italic;
+    }
+    
+    [contenteditable="true"]:focus:before {
+        content: '';
+    }
+    
+    .notion-block:hover .block-handle {
+        opacity: 1 !important;
+    }
+    
+    .block-handle {
+        cursor: grab;
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .block-handle:active {
+        cursor: grabbing;
+    }
+</style>
+{% endblock %}

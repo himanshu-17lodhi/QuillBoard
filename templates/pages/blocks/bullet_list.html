@@ -1,0 +1,27 @@
+<div class="flex group">
+    <div class="block-handle mr-2 opacity-0 group-hover:opacity-100">
+        <i class="fas fa-grip-vertical text-gray-400 cursor-grab"></i>
+    </div>
+    <div class="flex-1">
+        <div class="flex items-start">
+            <div class="mr-2 mt-2">
+                <span class="w-1.5 h-1.5 bg-gray-800 rounded-full inline-block"></span>
+            </div>
+            <div contenteditable="{% if membership.can_edit %}true{% else %}false{% endif %}"
+                 class="outline-none min-h-6 leading-relaxed flex-1"
+                 data-placeholder="List item"
+                 onblur="updateBlockContent(this, '{{ block.id }}')"
+                 oninput="handleBlockInput(this)">{{ block.content.text|default:"" }}</div>
+        </div>
+    </div>
+    {% if membership.can_edit %}
+        <div class="block-actions opacity-0 group-hover:opacity-100 ml-2">
+            <button onclick="duplicateBlock('{{ block.id }}')" class="text-gray-400 hover:text-gray-600 p-1">
+                <i class="fas fa-copy text-xs"></i>
+            </button>
+            <button onclick="deleteBlock('{{ block.id }}')" class="text-gray-400 hover:text-red-600 p-1">
+                <i class="fas fa-trash text-xs"></i>
+            </button>
+        </div>
+    {% endif %}
+</div>

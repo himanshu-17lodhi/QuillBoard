@@ -1,0 +1,7 @@
+{% with value=record.data|get_item:field.name %}
+    {% if value %}
+        <input type="checkbox" checked disabled class="rounded border-gray-300 text-indigo-600">
+    {% else %}
+        <input type="checkbox" disabled class="rounded border-gray-300">
+    {% endif %}
+{% endwith %}

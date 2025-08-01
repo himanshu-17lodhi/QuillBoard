@@ -30,6 +30,18 @@
         </div>
         
         <div>
+            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                Email Address
+            </label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="text-red-600 text-sm mt-1">
+                    {{ form.email.errors|first }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div>
             <label for="{{ form.password1.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
                 Password
             </label>
@@ -76,21 +88,4 @@
         </p>
     </div>
 </div>
-
-<style>
-    input[type="text"], input[type="password"] {
-        width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #d1d5db;
-        border-radius: 0.375rem;
-        font-size: 1rem;
-        transition: border-color 0.15s ease;
-    }
-    
-    input[type="text"]:focus, input[type="password"]:focus {
-        outline: none;
-        border-color: #6366f1;
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-    }
-</style>
 {% endblock %}

@@ -1,0 +1,59 @@
+<div class="flex group">
+    <div class="block-handle mr-2 opacity-0 group-hover:opacity-100">
+        <i class="fas fa-grip-vertical text-gray-400 cursor-grab"></i>
+    </div>
+    <div class="flex-1">
+        <div class="flex items-start">
+            <div class="mr-3 mt-1">
+                <input type="checkbox" 
+                       {% if block.content.checked %}checked{% endif %}
+                       {% if not membership.can_edit %}disabled{% endif %}
+                       onchange="toggleTodo('{{ block.id }}', this.checked)"
+                       class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+            </div>
+            <div contenteditable="{% if membership.can_edit %}true{% else %}false{% endif %}"
+                 class="outline-none min-h-6 leading-relaxed flex-1 {% if block.content.checked %}line-through text-gray-500{% endif %}"
+                 data-placeholder="To-do"
+                 onblur="updateBlockContent(this, '{{ block.id }}')"
+                 oninput="handleBlockInput(this)">{{ block.content.text|default:"" }}</div>
+        </div>
+    </div>
+    {% if membership.can_edit %}
+        <div class="block-actions opacity-0 group-hover:opacity-100 ml-2">
+            <button onclick="duplicateBlock('{{ block.id }}')" class="text-gray-400 hover:text-gray-600 p-1">
+                <i class="fas fa-copy text-xs"></i>
+            </button>
+            <button onclick="deleteBlock('{{ block.id }}')" class="text-gray-400 hover:text-red-600 p-1">
+                <i class="fas fa-trash text-xs"></i>
+            </button>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function toggleTodo(blockId, checked) {
+    const blockElement = document.querySelector(`[data-block-id="${blockId}"]`);
+    const textElement = blockElement.querySelector('[contenteditable]');
+    
+    if (checked) {
+        textElement.classList.add('line-through', 'text-gray-500');
+    } else {
+        textElement.classList.remove('line-through', 'text-gray-500');
+    }
+    
+    // Update block content
+    fetch(`/api/blocks/${blockId}/`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({
+            content: {
+                text: textElement.textContent,
+                checked: checked
+            }
+        })
+    });
+}
+</script>

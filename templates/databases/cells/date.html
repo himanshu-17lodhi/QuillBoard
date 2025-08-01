@@ -1,0 +1,5 @@
+{% with value=record.data|get_item:field.name %}
+    {% if value %}
+        {{ value|date:"M j, Y" }}
+    {% endif %}
+{% endwith %}
