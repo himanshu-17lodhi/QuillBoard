@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}QuillBoard - Collaborative Workspace{% endblock %}
+
+{% block main_class %}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div class="text-center">
+            <h1 class="text-5xl font-bold mb-6">
+                Your Ideas, Organized
+            </h1>
+            <p class="text-xl mb-8 max-w-3xl mx-auto">
+                A powerful, flexible workspace that adapts to the way you think, work, and collaborate. 
+                Create pages, build databases, and bring your team together in one place.
+            </p>
+            <div class="space-x-4">
+                <a href="{% url 'core:register' %}" class="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                    Get Started Free
+                </a>
+                <a href="#features" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-indigo-600 transition-colors">
+                    Learn More
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div id="features" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Everything you need to stay organized</h2>
+            <p class="text-xl text-gray-600">Powerful features designed for modern teams</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Feature 1: Pages & Blocks -->
+            <div class="text-center p-6">
+                <div class="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-file-alt text-2xl text-indigo-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Rich Pages</h3>
+                <p class="text-gray-600">Create beautiful pages with flexible blocks. Add text, images, embeds, and more with drag-and-drop simplicity.</p>
+            </div>
+            
+            <!-- Feature 2: Databases -->
+            <div class="text-center p-6">
+                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-database text-2xl text-green-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Powerful Databases</h3>
+                <p class="text-gray-600">Build custom databases with multiple views: tables, kanban boards, galleries, and calendars.</p>
+            </div>
+            
+            <!-- Feature 3: Real-time Collaboration -->
+            <div class="text-center p-6">
+                <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-users text-2xl text-purple-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Real-time Collaboration</h3>
+                <p class="text-gray-600">Work together seamlessly with real-time updates, comments, and cursor tracking.</p>
+            </div>
+            
+            <!-- Feature 4: Templates -->
+            <div class="text-center p-6">
+                <div class="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-layer-group text-2xl text-yellow-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Smart Templates</h3>
+                <p class="text-gray-600">Start fast with pre-built templates for meetings, projects, wikis, and more.</p>
+            </div>
+            
+            <!-- Feature 5: Automation -->
+            <div class="text-center p-6">
+                <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-robot text-2xl text-red-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Automation</h3>
+                <p class="text-gray-600">Automate repetitive tasks with rule-based workflows and smart buttons.</p>
+            </div>
+            
+            <!-- Feature 6: Integrations -->
+            <div class="text-center p-6">
+                <div class="bg-teal-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-plug text-2xl text-teal-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Integrations</h3>
+                <p class="text-gray-600">Connect with your favorite tools through APIs, webhooks, and built-in integrations.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<div class="bg-indigo-600 text-white py-16">
+    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold mb-4">Ready to get organized?</h2>
+        <p class="text-xl mb-8">Join thousands of teams already using QuillBoard to stay productive and organized.</p>
+        <a href="{% url 'core:register' %}" class="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+            Start Your Free Workspace
+        </a>
+    </div>
+</div>
+{% endblock %}
