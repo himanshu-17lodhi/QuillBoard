@@ -17,7 +17,7 @@ class WebSocketService {
 
   connect(pageId?: string, workspaceSlug?: string) {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const host = process.env.NODE_ENV === 'development' ? 'localhost:8000' : window.location.host;
+    const host = window.location.host;
     
     if (pageId) {
       this.url = `${protocol}//${host}/ws/pages/${pageId}/`;
