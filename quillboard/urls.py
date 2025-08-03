@@ -15,18 +15,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
+from core.views import ReactAppView
+from core.urls import api_urlpatterns as core_api_urls
 
 urlpatterns = [
+    # Admin
     path('admin/', admin.site.urls),
+    
+    # API routes - these must come before the catch-all
     path('api/', include('api.urls')),
-    path('', include('core.urls')),
-    path('workspaces/', include('workspaces.urls')),
-    path('pages/', include('pages.urls')),
-    path('databases/', include('databases.urls')),
+    path('api/', include((core_api_urls, 'core'), namespace='core_api')),
+    
+    # Django template views (for development/backward compatibility)
+    path('django/', include('core.urls')),
+    path('django/workspaces/', include('workspaces.urls')),
+    path('django/pages/', include('pages.urls')),
+    path('django/databases/', include('databases.urls')),
+    
+    # React SPA - catch all other routes (this MUST be last)
+    re_path(r'^.*$', ReactAppView.as_view(), name='react_app'),
 ]
 
 # Serve media files during development

@@ -1,18 +1,50 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { apiClient } from '../services/api';
+import type { RegisterFormData } from '../types';
 
 const Register: React.FC = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterFormData>({
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const [generalError, setGeneralError] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement registration logic
-    console.log('Register:', formData);
+    setLoading(true);
+    setErrors({});
+    setGeneralError('');
+
+    // Client-side validation
+    if (formData.password !== formData.confirmPassword) {
+      setErrors({ confirmPassword: ['Passwords do not match'] });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await apiClient.register(formData);
+      if (response.success) {
+        // Redirect to dashboard
+        navigate('/');
+      } else {
+        if (response.errors) {
+          setErrors(response.errors);
+        } else {
+          setGeneralError(response.error || 'Registration failed');
+        }
+      }
+    } catch (err) {
+      setGeneralError(err instanceof Error ? err.message : 'Registration failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,6 +52,18 @@ const Register: React.FC = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    
+    // Clear specific field error when user starts typing
+    if (errors[e.target.name]) {
+      setErrors({
+        ...errors,
+        [e.target.name]: [],
+      });
+    }
+  };
+
+  const getFieldError = (fieldName: string) => {
+    return errors[fieldName] && errors[fieldName].length > 0 ? errors[fieldName][0] : '';
   };
 
   return (
@@ -33,6 +77,13 @@ const Register: React.FC = () => {
             Create your account
           </h2>
         </div>
+        
+        {generalError && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            {generalError}
+          </div>
+        )}
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
@@ -44,11 +95,17 @@ const Register: React.FC = () => {
                 name="username"
                 type="text"
                 required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                disabled={loading}
+                className={`mt-1 appearance-none relative block w-full px-3 py-2 border rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50 ${
+                  getFieldError('username') ? 'border-red-300' : 'border-gray-300'
+                }`}
                 placeholder="Choose a username"
                 value={formData.username}
                 onChange={handleChange}
               />
+              {getFieldError('username') && (
+                <p className="mt-1 text-sm text-red-600">{getFieldError('username')}</p>
+              )}
             </div>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -59,11 +116,17 @@ const Register: React.FC = () => {
                 name="email"
                 type="email"
                 required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                disabled={loading}
+                className={`mt-1 appearance-none relative block w-full px-3 py-2 border rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50 ${
+                  getFieldError('email') ? 'border-red-300' : 'border-gray-300'
+                }`}
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
               />
+              {getFieldError('email') && (
+                <p className="mt-1 text-sm text-red-600">{getFieldError('email')}</p>
+              )}
             </div>
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
@@ -74,11 +137,17 @@ const Register: React.FC = () => {
                 name="password"
                 type="password"
                 required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                disabled={loading}
+                className={`mt-1 appearance-none relative block w-full px-3 py-2 border rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50 ${
+                  getFieldError('password') ? 'border-red-300' : 'border-gray-300'
+                }`}
                 placeholder="Create a password"
                 value={formData.password}
                 onChange={handleChange}
               />
+              {getFieldError('password') && (
+                <p className="mt-1 text-sm text-red-600">{getFieldError('password')}</p>
+              )}
             </div>
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
@@ -89,20 +158,34 @@ const Register: React.FC = () => {
                 name="confirmPassword"
                 type="password"
                 required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                disabled={loading}
+                className={`mt-1 appearance-none relative block w-full px-3 py-2 border rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50 ${
+                  getFieldError('confirmPassword') ? 'border-red-300' : 'border-gray-300'
+                }`}
                 placeholder="Confirm your password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
               />
+              {getFieldError('confirmPassword') && (
+                <p className="mt-1 text-sm text-red-600">{getFieldError('confirmPassword')}</p>
+              )}
             </div>
           </div>
 
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              disabled={loading}
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Create account
+              {loading ? (
+                <>
+                  <i className="fas fa-spinner fa-spin mr-2"></i>
+                  Creating account...
+                </>
+              ) : (
+                'Create account'
+              )}
             </button>
           </div>
 
