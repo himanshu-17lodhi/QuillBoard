@@ -1,6 +1,6 @@
-# QuillBoard - React Frontend + Django Backend
+# QuillBoard - Vanilla JS Frontend + Django Backend
 
-QuillBoard has been refactored to use a React SPA frontend with a Django REST API + Channels backend for real-time collaboration.
+QuillBoard uses a vanilla JavaScript SPA frontend with a Django REST API + Channels backend for real-time collaboration.
 
 ## Architecture
 
@@ -10,11 +10,11 @@ QuillBoard has been refactored to use a React SPA frontend with a Django REST AP
 - **Models**: User, Workspace, Page, Block, Database (unchanged)
 - **Authentication**: Session-based auth for API requests
 
-### Frontend (React)
-- **React SPA**: Single Page Application with TypeScript
+### Frontend (Vanilla JavaScript)
+- **Vanilla JS SPA**: Single Page Application with modern ES6+ features
 - **Tailwind CSS**: For styling and responsive design
-- **React Router**: For client-side routing
-- **Axios/Fetch**: For API communication
+- **Client-side Router**: Custom router for navigation
+- **Fetch API**: For API communication
 - **WebSocket**: For real-time collaboration features
 
 ## Development Setup
@@ -65,19 +65,19 @@ cd frontend
 npm install
 ```
 
-3. Start React development server:
+3. Start development server:
 ```bash
 npm run dev
 ```
 
-The React app will be available at `http://localhost:5173/`
+The application will be available at `http://localhost:5173/`
 
 ### Development Workflow
 
 1. **Backend Development**: Django server runs on port 8000
-2. **Frontend Development**: React dev server runs on port 5173
-3. **API Communication**: React app proxies API requests to Django server
-4. **CORS**: Configured to allow requests from React dev server
+2. **Frontend Development**: Vanilla JS dev server runs on port 5173
+3. **API Communication**: Frontend app proxies API requests to Django server
+4. **CORS**: Configured to allow requests from dev server
 5. **WebSockets**: Connect to Django Channels for real-time features
 
 ## API Endpoints
@@ -122,9 +122,9 @@ The React app will be available at `http://localhost:5173/`
 
 ## Production Setup
 
-### Build React App
+### Build Frontend App
 
-1. Build the React application:
+1. Build the application:
 ```bash
 cd frontend
 npm run build
@@ -134,7 +134,7 @@ This creates a `dist` folder with optimized static files.
 
 ### Django Static Files
 
-Django is configured to serve React build files from `frontend/dist/`:
+Django is configured to serve frontend build files from `frontend/dist/`:
 
 ```python
 # settings.py
@@ -174,12 +174,12 @@ server {
     listen 80;
     server_name yourdomain.com;
 
-    # React static files
+    # Frontend static files
     location / {
-        try_files $uri $uri/ @react;
+        try_files $uri $uri/ @frontend;
     }
     
-    location @react {
+    location @frontend {
         proxy_pass http://127.0.0.1:8000;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -226,13 +226,13 @@ QuillBoard/
 ├── frontend/
 │   ├── package.json
 │   ├── src/
-│   │   ├── components/      # React components
+│   │   ├── components/      # UI components
 │   │   ├── pages/           # Page components
 │   │   ├── services/        # API and WebSocket services
 │   │   ├── types/           # TypeScript type definitions
-│   │   └── utils/           # Utility functions
+│   │   └── router.js        # Client-side routing
 │   ├── public/              # Static assets
-│   └── dist/                # Built React app (production)
+│   └── dist/                # Built application (production)
 └── README.md
 ```
 
@@ -240,7 +240,7 @@ QuillBoard/
 
 ### Authentication
 - Session-based authentication with Django
-- React forms for login/register
+- Vanilla JS forms for login/register
 - Automatic redirect handling
 - User profile management
 
@@ -276,7 +276,7 @@ QuillBoard/
 - Input validation and sanitization
 
 ### Performance
-- React app code splitting
+- Modern JavaScript with code splitting
 - Lazy loading of components
 - Efficient WebSocket message handling
 - Database query optimization
@@ -291,7 +291,7 @@ python manage.py test
 ### Frontend Testing
 ```bash
 cd frontend
-npm test
+npm run lint
 ```
 
 ### End-to-End Testing
@@ -312,6 +312,6 @@ npm run e2e
 
 ### Debug Mode
 - Set `DEBUG=True` in Django settings
-- Use React dev tools in browser
+- Use browser dev tools for debugging
 - Check browser console for errors
 - Monitor Django logs for API issues

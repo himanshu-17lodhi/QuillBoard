@@ -1,69 +1,89 @@
-# React + TypeScript + Vite
+# QuillBoard Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, Notion-like collaborative workspace built with vanilla JavaScript, HTML, CSS, and Tailwind CSS.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Vanilla JavaScript SPA**: No React dependencies, pure JavaScript with modern ES6+ features
+- **Tailwind CSS**: Beautiful, responsive UI components
+- **Authentication**: Login and registration flows
+- **Workspaces**: Create and manage collaborative workspaces
+- **API Integration**: RESTful API client for backend communication
+- **WebSocket Support**: Real-time collaboration features
+- **Modern Build Tools**: Vite for fast development and optimized builds
 
-## Expanding the ESLint configuration
+## Development
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js 16+ 
+- npm or yarn
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### Setup
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# Lint code
+npm run lint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Project Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+├── components/          # Reusable UI components
+│   ├── layout.js       # Main application layout
+│   └── navigation.js   # Navigation header
+├── pages/              # Application pages
+│   ├── dashboard.js    # Main dashboard
+│   ├── login.js        # Login page
+│   ├── register.js     # Registration page
+│   └── workspaces.js   # Workspaces management
+├── services/           # API and WebSocket services
+│   ├── api.js          # REST API client
+│   └── websocket.js    # WebSocket service
+├── types/              # TypeScript type definitions
+├── router.js           # Client-side routing
+├── main.js             # Application entry point
+└── index.css           # Global styles (Tailwind)
+```
+
+## Technology Stack
+
+- **Frontend**: Vanilla JavaScript (ES6+), HTML5, CSS3
+- **Styling**: Tailwind CSS
+- **Build Tool**: Vite
+- **API**: Fetch API for HTTP requests
+- **Real-time**: WebSocket API
+- **Icons**: Font Awesome
+- **Linting**: ESLint
+
+## API Integration
+
+The application includes a robust API client that handles:
+
+- Authentication (login/logout/registration)
+- Workspace management
+- Page and block operations
+- Error handling and CSRF protection
+- Session management
+
+## WebSocket Features
+
+Real-time collaboration features include:
+
+- Live block updates
+- Page synchronization
+- Cursor position sharing
+- Connection management with auto-reconnect
