@@ -2,10 +2,10 @@
     <div class="block-handle mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         <i class="fas fa-grip-vertical text-gray-400 cursor-grab hover:text-gray-600"></i>
     </div>
-    <div class="flex-1">
+    <div class="flex-1 border-l-4 border-gray-300 pl-4">
         <div contenteditable="{% if membership.can_edit %}true{% else %}false{% endif %}" 
-             class="outline-none min-h-6 leading-relaxed text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-20 rounded-sm px-1 py-0.5 transition-all duration-200"
-             data-placeholder="Type '/' for commands, or just start writing..."
+             class="outline-none italic text-gray-700 leading-relaxed text-lg focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-20 rounded-sm px-1 py-1 transition-all duration-200"
+             data-placeholder="Write a quote..."
              onblur="updateBlockContent(this, '{{ block.id }}')"
              oninput="handleBlockInput(this)">{{ block.content.text|default:"" }}</div>
     </div>

@@ -12,6 +12,7 @@ template_urlpatterns = [
     path('register/', views.register, name='register'),
     path('profile/', views.profile, name='profile'),
     path('profile/<int:pk>/', views.profile_detail, name='profile_detail'),
+    path('js/<str:filename>', views.serve_js, name='serve_js'),
 ]
 
 # API URLs for React frontend

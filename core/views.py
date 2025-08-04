@@ -83,6 +83,26 @@ def profile_detail(request, pk):
     return render(request, 'core/profile_detail.html', {'profile_user': user})
 
 
+def serve_js(request, filename):
+    """Serve JavaScript files from templates/js directory"""
+    js_dir = os.path.join(settings.BASE_DIR, 'templates', 'js')
+    file_path = os.path.join(js_dir, filename)
+    
+    # Security check - ensure we're not serving files outside the js directory
+    if not os.path.commonpath([js_dir, file_path]) == js_dir:
+        return HttpResponse('Forbidden', status=403)
+    
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        response = HttpResponse(content, content_type='application/javascript')
+        response['Cache-Control'] = 'public, max-age=86400'  # Cache for 24 hours
+        return response
+    except FileNotFoundError:
+        return HttpResponse('File not found', status=404)
+
+
 # API endpoints for React frontend
 @csrf_exempt
 @require_http_methods(["POST"])

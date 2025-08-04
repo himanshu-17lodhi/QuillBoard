@@ -13,28 +13,222 @@
     
     <!-- Custom CSS -->
     <style>
+        /* Enhanced animations and transitions */
         .sidebar-transition {
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        
         .block-editor {
             min-height: 200px;
         }
+        
         .notion-block {
             position: relative;
             padding: 3px 0;
+            transition: all 0.2s ease;
         }
+        
+        .notion-block:hover {
+            background-color: rgba(55, 65, 81, 0.02);
+            border-radius: 0.375rem;
+        }
+        
         .notion-block:hover .block-handle {
             opacity: 1;
         }
+        
+        .notion-block.active-block {
+            background-color: rgba(99, 102, 241, 0.05);
+            border-radius: 0.375rem;
+        }
+        
         .block-handle {
             opacity: 0;
-            transition: opacity 0.2s;
+            transition: opacity 0.2s ease;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
         }
+        
+        .block-handle:hover {
+            background-color: rgba(55, 65, 81, 0.1);
+            border-radius: 0.25rem;
+        }
+        
+        .block-handle:active {
+            cursor: grabbing;
+        }
+        
+        /* Sortable styles */
         .sortable-ghost {
             opacity: 0.4;
+            background-color: rgba(99, 102, 241, 0.1) !important;
         }
+        
         .sortable-chosen {
             opacity: 1;
+            transform: rotate(5deg);
+        }
+        
+        .sortable-drag {
+            transform: rotate(5deg);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Slash command menu */
+        .slash-command-menu {
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(229, 231, 235, 0.8);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Enhanced contenteditable placeholders */
+        [contenteditable="true"]:empty:before {
+            content: attr(data-placeholder);
+            color: #9CA3AF;
+            font-style: italic;
+            pointer-events: none;
+        }
+        
+        [contenteditable="true"]:focus:before {
+            content: '';
+        }
+        
+        /* Collaboration cursors */
+        .collaboration-cursor {
+            transition: all 0.1s ease;
+        }
+        
+        /* Search enhancements */
+        #search-results {
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(229, 231, 235, 0.8);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .search-result-item:hover {
+            background-color: rgba(55, 65, 81, 0.05);
+        }
+        
+        /* Animations */
+        @keyframes modal-enter {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translate(-50%, -48%);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translate(-50%, -50%);
+            }
+        }
+        
+        @keyframes modal-exit {
+            from {
+                opacity: 1;
+                transform: scale(1) translate(-50%, -50%);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.95) translate(-50%, -48%);
+            }
+        }
+        
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-modal-enter {
+            animation: modal-enter 0.15s ease-out;
+        }
+        
+        .animate-modal-exit {
+            animation: modal-exit 0.15s ease-in;
+        }
+        
+        .animate-fade-in-up {
+            animation: fade-in-up 0.5s ease-out;
+        }
+        
+        /* Enhanced typography */
+        body {
+            font-feature-settings: "liga", "kern";
+            text-rendering: optimizeLegibility;
+        }
+        
+        /* Better focus states */
+        input:focus, textarea:focus, [contenteditable="true"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        /* Improved button styles */
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+        
+        /* Loading states */
+        .loading {
+            position: relative;
+            pointer-events: none;
+        }
+        
+        .loading::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(2px);
+            z-index: 10;
+        }
+        
+        /* Notification animations */
+        .notification {
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        /* Enhanced sidebar */
+        .sidebar-item {
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar-item:hover {
+            background-color: rgba(55, 65, 81, 0.05);
+            transform: translateX(2px);
+        }
+        
+        /* Responsive improvements */
+        @media (max-width: 768px) {
+            .sidebar-transition {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar-transition.open {
+                transform: translateX(0);
+            }
         }
     </style>
     
@@ -102,6 +296,32 @@
     <!-- JavaScript Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- QuillBoard JavaScript Modules -->
+    <script>
+        // Include UI Components
+        {% include 'js/ui-components.js' %}
+    </script>
+    
+    <script>
+        // Include Search functionality
+        {% include 'js/search.js' %}
+    </script>
+    
+    <script>
+        // Include Keyboard Shortcuts
+        {% include 'js/shortcuts.js' %}
+    </script>
+    
+    <script>
+        // Include Collaboration features
+        {% include 'js/collaboration.js' %}
+    </script>
+    
+    <script>
+        // Include Block Editor
+        {% include 'js/block-editor.js' %}
+    </script>
     
     <!-- WebSocket Support -->
     <script>
