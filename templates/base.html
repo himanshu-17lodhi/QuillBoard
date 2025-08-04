@@ -298,29 +298,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <!-- QuillBoard JavaScript Modules -->
-    <script>
-        // Include UI Components
-        {% include 'js/ui-components.js' %}
-    </script>
-    
-    <script>
-        // Include Search functionality
-        {% include 'js/search.js' %}
-    </script>
-    
-    <script>
-        // Include Keyboard Shortcuts
-        {% include 'js/shortcuts.js' %}
-    </script>
-    
-    <script>
-        // Include Collaboration features
-        {% include 'js/collaboration.js' %}
-    </script>
-    
-    <script>
-        // Include Block Editor
-        {% include 'js/block-editor.js' %}
+    <script src="{% static 'js/ui-components.js' %}"></script>
+    <script src="{% static 'js/search.js' %}"></script>
+    <script src="{% static 'js/shortcuts.js' %}"></script>
+    <script src="{% static 'js/collaboration.js' %}"></script>
+    <script src="{% static 'js/block-editor.js' %}"></script>
     </script>
     
     <!-- WebSocket Support -->
