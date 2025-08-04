@@ -276,6 +276,33 @@
         pageWS = new QuillBoardWS(`ws://${window.location.host}/ws/pages/{{ page.id }}/`);
     }
     
+    // Initialize collaboration manager
+    let collaborationManager = null;
+    let blockEditor = null;
+    
+    // Wait for DOM to be ready
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize collaboration
+        collaborationManager = new CollaborationManager(pageWS, {
+            currentUser: {
+                id: {{ user.id }},
+                username: '{{ user.username }}',
+                avatar: '{% if user.avatar %}{{ user.avatar.url }}{% else %}{% endif %}'
+            }
+        });
+        
+        // Initialize block editor
+        const blocksContainer = document.getElementById('blocks-container');
+        if (blocksContainer) {
+            blockEditor = new BlockEditor(blocksContainer, {
+                canEdit: {{ membership.can_edit|yesno:"true,false" }},
+                websocket: pageWS,
+                pageId: {{ page.id }},
+                csrfToken: '{{ csrf_token }}'
+            });
+        }
+    });
+    
     // Override WebSocket message handler
     pageWS.handleMessage = function(data) {
         if (data.type === 'block_update') {
@@ -283,24 +310,14 @@
         } else if (data.type === 'page_update') {
             updatePageFromWS(data);
         } else if (data.type === 'cursor_position') {
-            showCursorPosition(data);
+            // Handled by collaboration manager
+        }
+        
+        // Pass to collaboration manager
+        if (collaborationManager) {
+            collaborationManager.websocket.handleMessage(data);
         }
     };
-    
-    // Initialize sortable for drag-and-drop
-    const blocksContainer = document.getElementById('blocks-container');
-    if (blocksContainer && {{ membership.can_edit|yesno:"true,false" }}) {
-        new Sortable(blocksContainer, {
-            handle: '.block-handle',
-            ghostClass: 'sortable-ghost',
-            chosenClass: 'sortable-chosen',
-            onEnd: function(evt) {
-                const blockId = evt.item.dataset.blockId;
-                const newOrder = evt.newIndex;
-                updateBlockOrder(blockId, newOrder);
-            }
-        });
-    }
     
     // Page functions
     function updatePageTitle(element) {
@@ -334,104 +351,26 @@
     }
     
     function addNewBlock() {
-        document.getElementById('blockTypeModal').classList.remove('hidden');
+        if (blockEditor) {
+            // Show slash commands instead of the old modal
+            const addBlockArea = document.getElementById('add-block-area');
+            if (addBlockArea) {
+                const fakeEvent = {
+                    target: { contentEditable: 'true', textContent: '', closest: () => addBlockArea },
+                    key: '/',
+                    preventDefault: () => {}
+                };
+                blockEditor.showSlashCommands(addBlockArea);
+            }
+        }
     }
     
     function createBlock(blockType) {
-        const order = document.querySelectorAll('.notion-block').length;
-        
-        fetch(`/api/pages/{{ page.id }}/blocks/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify({
-                block_type: blockType,
-                content: getDefaultContent(blockType),
-                order: order
-            })
-        }).then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-        }).then(data => {
-            if (data) {
-                addBlockToDOM(data);
+        if (blockEditor) {
+            blockEditor.createBlock(blockType).then(() => {
                 closeModal('blockTypeModal');
-            }
-        });
-    }
-    
-    function getDefaultContent(blockType) {
-        const defaults = {
-            'text': { text: '' },
-            'heading': { text: '', level: 1 },
-            'bullet_list': { text: '' },
-            'todo': { text: '', checked: false },
-            'image': { url: '', caption: '' },
-            'divider': {},
-            'callout': { text: '', icon: '💡' }
-        };
-        return defaults[blockType] || {};
-    }
-    
-    function addBlockToDOM(blockData) {
-        // Add new block to the DOM
-        const blocksContainer = document.getElementById('blocks-container');
-        const addBlockArea = document.getElementById('add-block-area');
-        
-        const blockElement = document.createElement('div');
-        blockElement.className = 'notion-block';
-        blockElement.dataset.blockId = blockData.id;
-        blockElement.dataset.blockType = blockData.block_type;
-        
-        // This would render the block based on its type
-        blockElement.innerHTML = renderBlock(blockData);
-        
-        blocksContainer.insertBefore(blockElement, addBlockArea);
-        
-        // Focus on the new block
-        const editableElement = blockElement.querySelector('[contenteditable="true"]');
-        if (editableElement) {
-            editableElement.focus();
+            });
         }
-    }
-    
-    function renderBlock(blockData) {
-        // Simple block rendering - in a full implementation, this would be more sophisticated
-        switch (blockData.block_type) {
-            case 'text':
-                return `<div class="flex">
-                    <div class="block-handle mr-2 opacity-0"><i class="fas fa-grip-vertical text-gray-400"></i></div>
-                    <div class="flex-1">
-                        <div contenteditable="true" class="outline-none" data-placeholder="Type something...">${blockData.content.text || ''}</div>
-                    </div>
-                </div>`;
-            case 'heading':
-                return `<div class="flex">
-                    <div class="block-handle mr-2 opacity-0"><i class="fas fa-grip-vertical text-gray-400"></i></div>
-                    <div class="flex-1">
-                        <h${blockData.content.level || 1} contenteditable="true" class="font-bold outline-none" data-placeholder="Heading">${blockData.content.text || ''}</h${blockData.content.level || 1}>
-                    </div>
-                </div>`;
-            default:
-                return `<div class="flex">
-                    <div class="block-handle mr-2 opacity-0"><i class="fas fa-grip-vertical text-gray-400"></i></div>
-                    <div class="flex-1">Block type: ${blockData.block_type}</div>
-                </div>`;
-        }
-    }
-    
-    function updateBlockOrder(blockId, newOrder) {
-        fetch(`/api/blocks/${blockId}/move/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify({ order: newOrder })
-        });
     }
     
     function updateBlockFromWS(data) {
@@ -453,38 +392,6 @@
         }
     }
     
-    function showCursorPosition(data) {
-        // Show other users' cursor positions
-        console.log(`${data.user} is editing block ${data.block_id} at position ${data.position}`);
-    }
-    
-    // Auto-save content changes
-    document.addEventListener('input', debounce(function(e) {
-        if (e.target.contentEditable === 'true') {
-            const blockElement = e.target.closest('.notion-block');
-            if (blockElement) {
-                const blockId = blockElement.dataset.blockId;
-                const blockType = blockElement.dataset.blockType;
-                
-                let content = {};
-                if (blockType === 'text' || blockType === 'heading') {
-                    content.text = e.target.textContent;
-                    if (blockType === 'heading') {
-                        content.level = parseInt(e.target.tagName.charAt(1)) || 1;
-                    }
-                }
-                
-                // Send update via WebSocket
-                pageWS.send({
-                    type: 'block_update',
-                    block_id: blockId,
-                    content: content,
-                    timestamp: Date.now()
-                });
-            }
-        }
-    }, 500));
-    
     // Utility functions
     function closeModal(modalId) {
         document.getElementById(modalId).classList.add('hidden');
@@ -500,30 +407,12 @@
             }
         });
     });
-    
-    // Placeholder behavior for empty contenteditable elements
-    document.addEventListener('focus', function(e) {
-        if (e.target.contentEditable === 'true' && e.target.textContent === '') {
-            e.target.classList.add('empty');
-        }
-    }, true);
-    
-    document.addEventListener('blur', function(e) {
-        if (e.target.contentEditable === 'true') {
-            e.target.classList.remove('empty');
-        }
-    }, true);
 </script>
 
 <style>
-    [contenteditable="true"]:empty:before {
-        content: attr(data-placeholder);
-        color: #9CA3AF;
-        font-style: italic;
-    }
-    
-    [contenteditable="true"]:focus:before {
-        content: '';
+    /* Enhanced block styles */
+    .notion-block {
+        transition: all 0.2s ease;
     }
     
     .notion-block:hover .block-handle {
@@ -537,10 +426,65 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        transition: all 0.2s ease;
+    }
+    
+    .block-handle:hover {
+        background-color: rgba(55, 65, 81, 0.1);
+        border-radius: 0.25rem;
     }
     
     .block-handle:active {
         cursor: grabbing;
+    }
+    
+    /* Content editable improvements */
+    [contenteditable="true"] {
+        min-height: 1.25rem;
+        line-height: 1.5;
+    }
+    
+    [contenteditable="true"]:empty:before {
+        content: attr(data-placeholder);
+        color: #9CA3AF;
+        font-style: italic;
+    }
+    
+    [contenteditable="true"]:focus:before {
+        content: '';
+    }
+    
+    /* Page title styling */
+    .page-title {
+        line-height: 1.2;
+        min-height: 2.5rem;
+    }
+    
+    .page-title:empty:before {
+        content: "Untitled";
+        color: #9CA3AF;
+        font-style: italic;
+    }
+    
+    /* Better visual feedback for active blocks */
+    .notion-block.active-block {
+        background-color: rgba(99, 102, 241, 0.05);
+        border-radius: 0.375rem;
+        margin: -2px;
+        padding: 2px;
+    }
+    
+    /* Collaboration enhancements */
+    .collaboration-cursor {
+        z-index: 1000;
+        transition: all 0.1s ease;
+    }
+    
+    /* Enhanced page header */
+    .page-header {
+        backdrop-filter: blur(8px);
+        background-color: rgba(255, 255, 255, 0.95);
+        border-bottom: 1px solid rgba(229, 231, 235, 0.8);
     }
 </style>
 {% endblock %}

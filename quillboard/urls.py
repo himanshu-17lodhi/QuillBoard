@@ -32,11 +32,17 @@ urlpatterns = [
     path('api/', include('api.urls')),
     path('api/', include((core_api_urls, 'core'), namespace='core_api')),
     
-    # Django template views (for development/backward compatibility)
-    path('django/', include('core.urls')),
-    path('django/workspaces/', include('workspaces.urls')),
-    path('django/pages/', include('pages.urls')),
-    path('django/databases/', include('databases.urls')),
+    # Django template views (main interface)
+    path('', include('core.urls')),
+    path('workspaces/', include('workspaces.urls')),
+    path('pages/', include('pages.urls')),
+    path('databases/', include('databases.urls')),
+    
+    # Legacy Django template views (for backward compatibility)
+    path('django/', include('core.urls'), name='django_fallback'),
+    path('django/workspaces/', include('workspaces.urls'), name='django_workspaces_fallback'),
+    path('django/pages/', include('pages.urls'), name='django_pages_fallback'),
+    path('django/databases/', include('databases.urls'), name='django_databases_fallback'),
 ]
 
 # Serve React static files
@@ -54,7 +60,7 @@ if settings.DEBUG:
         }),
     ]
 
-# React SPA - catch all other routes (this MUST be last)
+# React SPA - catch all other unmatched routes (this MUST be last)
 urlpatterns += [
-    re_path(r'^.*$', ReactAppView.as_view(), name='react_app'),
+    re_path(r'^react/.*$', ReactAppView.as_view(), name='react_app'),
 ]
