@@ -14,7 +14,7 @@ import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import { lowlight } from 'lowlight';
 import * as Y from 'yjs';
 import { WebrtcProvider } from 'y-webrtc';
-import { useStore } from '../../stores/useStore';
+import { useStore } from '../../src/stores/useStore';
 import { useEffect, useState } from 'react';
 
 interface EnhancedEditorProps {

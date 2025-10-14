@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Sidebar from '../components/sidebar/Sidebar'
 import Navbar from '../components/navbar/Navbar'
-import { useStore } from '../stores/useStore'
+import { useStore } from '../src/stores/useStore'
 
 export default function Dashboard() {
   const router = useRouter()

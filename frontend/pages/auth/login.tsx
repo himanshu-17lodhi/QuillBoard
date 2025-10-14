@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { useStore } from '../../stores/useStore'
+import { useStore } from '../../src/stores/useStore'
 
 export default function Login() {
   const [email, setEmail] = useState('')

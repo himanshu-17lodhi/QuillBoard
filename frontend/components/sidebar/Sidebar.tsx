@@ -1,7 +1,7 @@
 // frontend/components/sidebar/Sidebar.tsx
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { useStore } from '../../stores/useStore'
+import { useStore } from '../../src/stores/useStore'
 import WorkspaceList from './WorkspaceList'
 import DocumentList from './DocumentList'
 

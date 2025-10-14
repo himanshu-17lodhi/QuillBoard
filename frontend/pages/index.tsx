@@ -1,7 +1,7 @@
 // frontend/pages/index.tsx
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { useStore } from '../stores/useStore'
+import { useStore } from '../src/stores/useStore'
 
 export default function Home() {
   const router = useRouter()

@@ -4,8 +4,8 @@ import { useRouter } from 'next/router'
 import Sidebar from '../../components/sidebar/Sidebar'
 import Navbar from '../../components/navbar/Navbar'
 import Editor from '../../components/editor/Editor'
-import { useStore } from '../../stores/useStore'
-import { Document } from '../../types'
+import { useStore } from '../../src/stores/useStore'
+import { Document } from '../../src/types'
 
 export default function Workspace() {
   const router = useRouter()

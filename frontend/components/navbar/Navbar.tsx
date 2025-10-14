@@ -1,6 +1,6 @@
 // frontend/components/navbar/Navbar.tsx
 import { useState } from 'react'
-import { useStore } from '../../stores/useStore'
+import { useStore } from '../../src/stores/useStore'
 
 export default function Navbar() {
   const [showUserMenu, setShowUserMenu] = useState(false)
