@@ -24,7 +24,7 @@ export class DocumentsService {
     }
 
     // Check if user has access to the workspace
-    if (document.workspace.members.length === 0) {
+    if (!document.workspace || document.workspace.members.length === 0) {
       throw new ForbiddenException('You do not have access to this document');
     }
 
@@ -129,6 +129,11 @@ export class DocumentsService {
       },
     });
 
+    // --- FIX IS HERE ---
+    if (!workspace || workspace.members.length === 0) {
+      throw new ForbiddenException('You do not have permission to delete this document');
+    }
+
     const member = workspace.members[0];
     if (member.role !== 'owner' && member.role !== 'editor') {
       throw new ForbiddenException('You do not have permission to delete this document');
@@ -151,6 +156,11 @@ export class DocumentsService {
         },
       },
     });
+
+    // --- FIX IS HERE ---
+    if (!workspace || workspace.members.length === 0) {
+      throw new ForbiddenException('You do not have permission to add collaborators');
+    }
 
     const member = workspace.members[0];
     if (member.role !== 'owner' && member.role !== 'editor') {
@@ -187,6 +197,11 @@ export class DocumentsService {
         },
       },
     });
+
+    // --- FIX IS HERE ---
+    if (!workspace || workspace.members.length === 0) {
+      throw new ForbiddenException('You do not have permission to remove collaborators');
+    }
 
     const member = workspace.members[0];
     if (member.role !== 'owner' && member.role !== 'editor') {

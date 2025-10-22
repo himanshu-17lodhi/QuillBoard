@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 10, "column": 0}, "map": {"version":3,"sources":["file:///E:/newquillboard/frontend/pages/_app.tsx"],"sourcesContent":["// frontend/pages/_app.tsx\r\nimport type { AppProps } from 'next/app'\r\nimport { QueryClient, QueryClientProvider } from '@tanstack/react-query'\r\nimport { ReactQueryDevtools } from '@tanstack/react-query-devtools'\r\nimport { useStore } from '../src/stores/useStore'\r\nimport '../styles/globals.css'\r\n\r\nconst queryClient = new QueryClient()\r\n\r\nfunction MyApp({ Component, pageProps }: AppProps) {\r\n  return (\r\n    <QueryClientProvider client={queryClient}>\r\n      <Component {...pageProps} />\r\n      <ReactQueryDevtools initialIsOpen={false} />\r\n    </QueryClientProvider>\r\n  )\r\n}\r\n\r\nexport default MyApp"],"names":[],"mappings":"AAAA,0BAA0B;;;;;;;;;;;;;;;;;;;;;;;;;AAO1B,MAAM,cAAc,IAAI;AAExB,SAAS,MAAM,EAAE,SAAS,EAAE,SAAS,EAAY;IAC/C,qBACE,qKAAC;QAAoB,QAAQ;;0BAC3B,qKAAC;gBAAW,GAAG,SAAS;;;;;;0BACxB,qKAAC;gBAAmB,eAAe;;;;;;;;;;;;AAGzC;uCAEe","debugId":null}}]
+}

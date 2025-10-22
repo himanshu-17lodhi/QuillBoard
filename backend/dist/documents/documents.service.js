@@ -33,7 +33,7 @@ let DocumentsService = class DocumentsService {
         if (!document) {
             throw new Error('Document not found');
         }
-        if (document.workspace.members.length === 0) {
+        if (!document.workspace || document.workspace.members.length === 0) {
             throw new common_1.ForbiddenException('You do not have access to this document');
         }
         return document;
@@ -123,6 +123,9 @@ let DocumentsService = class DocumentsService {
                 },
             },
         });
+        if (!workspace || workspace.members.length === 0) {
+            throw new common_1.ForbiddenException('You do not have permission to delete this document');
+        }
         const member = workspace.members[0];
         if (member.role !== 'owner' && member.role !== 'editor') {
             throw new common_1.ForbiddenException('You do not have permission to delete this document');
@@ -141,6 +144,9 @@ let DocumentsService = class DocumentsService {
                 },
             },
         });
+        if (!workspace || workspace.members.length === 0) {
+            throw new common_1.ForbiddenException('You do not have permission to add collaborators');
+        }
         const member = workspace.members[0];
         if (member.role !== 'owner' && member.role !== 'editor') {
             throw new common_1.ForbiddenException('You do not have permission to add collaborators');
@@ -172,6 +178,9 @@ let DocumentsService = class DocumentsService {
                 },
             },
         });
+        if (!workspace || workspace.members.length === 0) {
+            throw new common_1.ForbiddenException('You do not have permission to remove collaborators');
+        }
         const member = workspace.members[0];
         if (member.role !== 'owner' && member.role !== 'editor') {
             throw new common_1.ForbiddenException('You do not have permission to remove collaborators');

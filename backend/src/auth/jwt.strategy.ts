@@ -1,7 +1,6 @@
-// backend/src/auth/jwt.strategy.ts
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common'; // <-- FIXED
 import { PrismaService } from '../prisma.service';
 
 @Injectable()

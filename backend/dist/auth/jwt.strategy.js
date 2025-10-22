@@ -29,7 +29,7 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
             where: { id: payload.sub },
         });
         if (!user) {
-            throw new UnauthorizedException();
+            throw new common_1.UnauthorizedException();
         }
         const { password, ...result } = user;
         return result;
