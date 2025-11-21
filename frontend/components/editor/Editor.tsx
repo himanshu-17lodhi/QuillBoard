@@ -1,121 +1,112 @@
-// frontend/components/editor/Editor.tsx
-import { useEditor, EditorContent } from '@tiptap/react'
+import { useEditor, EditorContent, BubbleMenu } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
-import Collaboration from '@tiptap/extension-collaboration'
-import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
-import * as Y from 'yjs'
-import { WebrtcProvider } from 'y-webrtc'
-import { useStore } from '../../src/stores/useStore'
-import { useEffect, useState } from 'react'
+import Underline from '@tiptap/extension-underline'
+import Highlight from '@tiptap/extension-highlight'
+import TaskList from '@tiptap/extension-task-list'
+import TaskItem from '@tiptap/extension-task-item'
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import { all, createLowlight } from 'lowlight'
+import { useEffect } from 'react'
+import { Bold, Italic, Strikethrough, Code, List, CheckSquare, Highlighter } from 'lucide-react'
+
+// Setup syntax highlighting
+const lowlight = createLowlight(all)
 
 interface EditorProps {
   documentId: string
+  content?: any
+  onChange?: (content: any) => void
+  editable?: boolean
 }
 
-export default function Editor({ documentId }: EditorProps) {
-  const user = useStore((state) => state.user)
-  const currentDocument = useStore((state) => state.currentDocument)
-  const updateDocument = useStore((state) => state.updateDocument)
-  const [provider, setProvider] = useState<WebrtcProvider | null>(null)
-  const [ydoc, setYdoc] = useState<Y.Doc | null>(null)
-
-  // Set up Y.js for collaborative editing
-  useEffect(() => {
-    const yDoc = new Y.Doc()
-    const yProvider = new WebrtcProvider(documentId, yDoc)
-    
-    setYdoc(yDoc)
-    setProvider(yProvider)
-
-    return () => {
-      yProvider.destroy()
-      yDoc.destroy()
-    }
-  }, [documentId])
-
+export default function Editor({ documentId, content, onChange, editable = true }: EditorProps) {
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        codeBlock: false, // Disable default codeBlock to use Lowlight
+      }),
+      Underline,
+      Highlight.configure({ multicolor: true }),
+      TaskList,
+      TaskItem.configure({ nested: true }),
+      CodeBlockLowlight.configure({ lowlight }),
       Placeholder.configure({
-        placeholder: 'Start writing...',
-      }),
-      Collaboration.configure({
-        document: ydoc!,
-      }),
-      CollaborationCursor.configure({
-        provider: provider!,
-        user: {
-          name: user?.name || 'Anonymous',
-          color: '#f56565',
-        },
+        placeholder: "Type '/' for commands...",
+        emptyEditorClass: 'is-editor-empty',
       }),
     ],
-    content: currentDocument?.content || '<p>Start collaborating!</p>',
-    onUpdate: ({ editor }) => {
-      // Debounce content updates to avoid too many API calls
-      const content = editor.getJSON()
-      updateDocument(documentId, { content })
-    },
+    content: content || '',
+    editable: editable,
     editorProps: {
       attributes: {
-        class: 'prose prose-invert max-w-none focus:outline-none',
+        class: 'prose prose-invert max-w-none focus:outline-none text-[#D4D4D4] leading-7',
       },
+    },
+    onUpdate: ({ editor }) => {
+      if (onChange) onChange(editor.getJSON())
     },
   })
 
+  // Sync content when documentId changes
   useEffect(() => {
-    if (editor && currentDocument) {
-      editor.commands.setContent(currentDocument.content || '')
+    if (editor && content) {
+        const currentContent = JSON.stringify(editor.getJSON())
+        const newContent = JSON.stringify(content)
+        if (currentContent !== newContent) {
+             editor.commands.setContent(content)
+        }
     }
-  }, [editor, currentDocument])
+  }, [content, documentId, editor])
 
-  if (!editor) {
-    return (
-      <div className="min-h-screen p-8 bg-gray-900 text-gray-100">
-        <div className="animate-pulse">Loading editor...</div>
-      </div>
-    )
-  }
+  if (!editor) return null
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
-      {/* Toolbar */}
-      <div className="border-b border-gray-700 p-4 bg-gray-800">
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => editor.chain().focus().toggleBold().run()}
-            className={`p-2 rounded-md ${editor.isActive('bold') ? 'bg-gray-700' : 'hover:bg-gray-700'}`}
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6h18M6 12h12M3 18h18" />
-            </svg>
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-            className={`p-2 rounded-md ${editor.isActive('heading', { level: 1 }) ? 'bg-gray-700' : 'hover:bg-gray-700'}`}
-          >
-            H1
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-            className={`p-2 rounded-md ${editor.isActive('heading', { level: 2 }) ? 'bg-gray-700' : 'hover:bg-gray-700'}`}
-          >
-            H2
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
-            className={`p-2 rounded-md ${editor.isActive('bulletList') ? 'bg-gray-700' : 'hover:bg-gray-700'}`}
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-      </div>
+    <div className="relative w-full">
+      {/* --- FLOATING BUBBLE MENU (The Notion Way) --- */}
+      {editor && (
+        <BubbleMenu className="flex bg-[#252525] border border-[#333] shadow-xl rounded-md overflow-hidden divide-x divide-[#333]" tippyOptions={{ duration: 100 }} editor={editor}>
+          
+          <button onClick={() => editor.chain().focus().toggleBold().run()} className={`p-2 hover:bg-[#333] text-white ${editor.isActive('bold') ? 'text-blue-400' : ''}`}><Bold size={14} /></button>
+          <button onClick={() => editor.chain().focus().toggleItalic().run()} className={`p-2 hover:bg-[#333] text-white ${editor.isActive('italic') ? 'text-blue-400' : ''}`}><Italic size={14} /></button>
+          <button onClick={() => editor.chain().focus().toggleStrike().run()} className={`p-2 hover:bg-[#333] text-white ${editor.isActive('strike') ? 'text-blue-400' : ''}`}><Strikethrough size={14} /></button>
+          <button onClick={() => editor.chain().focus().toggleCode().run()} className={`p-2 hover:bg-[#333] text-white ${editor.isActive('code') ? 'text-blue-400' : ''}`}><Code size={14} /></button>
+          <button onClick={() => editor.chain().focus().toggleBulletList().run()} className={`p-2 hover:bg-[#333] text-white ${editor.isActive('bulletList') ? 'text-blue-400' : ''}`}><List size={14} /></button>
+          <button onClick={() => editor.chain().focus().toggleTaskList().run()} className={`p-2 hover:bg-[#333] text-white ${editor.isActive('taskList') ? 'text-blue-400' : ''}`}><CheckSquare size={14} /></button>
+          <button onClick={() => editor.chain().focus().toggleHighlight().run()} className={`p-2 hover:bg-[#333] text-white ${editor.isActive('highlight') ? 'text-yellow-400' : ''}`}><Highlighter size={14} /></button>
 
-      {/* Editor content */}
-      <EditorContent editor={editor} className="min-h-screen p-8" />
+        </BubbleMenu>
+      )}
+
+      {/* --- Editor Styles --- */}
+      <style jsx global>{`
+        .is-editor-empty:first-child::before {
+          color: #3F3F3F;
+          content: attr(data-placeholder);
+          float: left;
+          height: 0;
+          pointer-events: none;
+        }
+        /* Headings */
+        .ProseMirror h1 { font-size: 1.875rem; font-weight: 700; margin-top: 1.5em; margin-bottom: 0.5em; color: white; }
+        .ProseMirror h2 { font-size: 1.5rem; font-weight: 600; margin-top: 1.4em; margin-bottom: 0.5em; color: white; }
+        .ProseMirror h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.2em; margin-bottom: 0.5em; color: white; }
+        /* Lists */
+        .ProseMirror ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 0.5em; }
+        .ProseMirror ol { list-style-type: decimal; padding-left: 1.5em; margin-bottom: 0.5em; }
+        /* Tasks */
+        ul[data-type="taskList"] { list-style: none; padding: 0; }
+        li[data-type="taskItem"] { display: flex; align-items: flex-start; margin-bottom: 0.5rem; }
+        li[data-type="taskItem"] input[type="checkbox"] { margin-right: 0.5rem; margin-top: 0.3rem; }
+        /* Code Blocks */
+        .ProseMirror pre { background: #1E1E1E; color: #D4D4D4; padding: 0.75rem 1rem; border-radius: 0.5rem; font-family: 'JetBrains Mono', monospace; margin: 1rem 0; }
+        .ProseMirror code { background-color: #2C2C2C; color: #EB5757; padding: 0.2em 0.4em; border-radius: 3px; font-size: 0.85em; }
+        .ProseMirror pre code { background: none; color: inherit; padding: 0; font-size: 0.9em; }
+        /* Blockquote */
+        .ProseMirror blockquote { border-left: 3px solid #444; padding-left: 1em; color: #9B9B9B; font-style: italic; }
+      `}</style>
+
+      <EditorContent editor={editor} />
     </div>
   )
 }

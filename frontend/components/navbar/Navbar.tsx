@@ -1,59 +1,47 @@
-// frontend/components/navbar/Navbar.tsx
-import { useState } from 'react'
 import { useStore } from '../../src/stores/useStore'
+import { Menu, Bell, Share2, MoreHorizontal } from 'lucide-react'
 
 export default function Navbar() {
-  const [showUserMenu, setShowUserMenu] = useState(false)
-  const user = useStore((state) => state.user)
-  const currentDocument = useStore((state) => state.currentDocument)
+  const currentWorkspace = useStore((state) => state.currentWorkspace)
 
   return (
-    <div className="h-12 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-4">
-      {/* Document title */}
-      <div className="flex items-center space-x-2">
-        <button className="p-1 rounded hover:bg-gray-700">
-          {/* Menu icon */}
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+    <nav className="h-12 bg-[#111111] border-b border-[#222] flex items-center justify-between px-4 text-gray-300 shrink-0 font-sans">
+      {/* Left: Breadcrumbs */}
+      <div className="flex items-center gap-2 overflow-hidden">
+        <button className="lg:hidden p-1 hover:bg-[#222] rounded text-gray-400">
+             <Menu size={18} />
         </button>
-        {currentDocument && (
-          <h1 className="text-lg font-medium">{currentDocument.title}</h1>
-        )}
-      </div>
-
-      {/* Collaboration status and user menu */}
-      <div className="flex items-center space-x-4">
-        {/* Collaboration status */}
-        <div className="flex items-center space-x-1 text-sm text-gray-400">
-          <div className="w-2 h-2 rounded-full bg-green-500"></div>
-          <span>Connected</span>
-        </div>
-
-        {/* User menu */}
-        <div className="relative">
-          <button
-            onClick={() => setShowUserMenu(!showUserMenu)}
-            className="flex items-center space-x-2 focus:outline-none"
-          >
-            <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-white">
-              {user?.name?.charAt(0) || user?.email?.charAt(0) || 'U'}
-            </div>
-          </button>
-
-          {showUserMenu && (
-            <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg py-1 border border-gray-700 z-10">
-              <div className="px-4 py-2 border-b border-gray-700">
-                <p className="text-sm font-medium">{user?.name || 'User'}</p>
-                <p className="text-xs text-gray-400">{user?.email}</p>
-              </div>
-              <a href="#" className="block px-4 py-2 text-sm hover:bg-gray-700">Profile</a>
-              <a href="#" className="block px-4 py-2 text-sm hover:bg-gray-700">Settings</a>
-              <a href="/api/auth/logout" className="block px-4 py-2 text-sm hover:bg-gray-700">Sign out</a>
-            </div>
-          )}
+        
+        <div className="flex items-center gap-2 text-sm">
+            {currentWorkspace ? (
+               <>
+                 <span className="flex items-center gap-2 px-1.5 py-0.5 rounded hover:bg-[#222] cursor-pointer transition-colors truncate">
+                    <span className="w-4 h-4 bg-green-600 rounded text-[10px] flex items-center justify-center text-white font-bold">
+                        {currentWorkspace.name[0].toUpperCase()}
+                    </span>
+                    {currentWorkspace.name}
+                 </span>
+                 <span className="text-gray-600">/</span>
+                 <span className="px-1.5 py-0.5 rounded text-gray-500">Dashboard</span>
+               </>
+            ) : (
+               <span>Select a Workspace</span>
+            )}
         </div>
       </div>
-    </div>
+
+      {/* Right: Actions */}
+      <div className="flex items-center gap-1">
+        <button className="p-1.5 hover:bg-[#222] rounded text-gray-400 transition-colors">
+             <Share2 size={16} />
+        </button>
+        <button className="p-1.5 hover:bg-[#222] rounded text-gray-400 transition-colors">
+             <Bell size={16} />
+        </button>
+        <button className="p-1.5 hover:bg-[#222] rounded text-gray-400 transition-colors">
+             <MoreHorizontal size={16} />
+        </button>
+      </div>
+    </nav>
   )
 }

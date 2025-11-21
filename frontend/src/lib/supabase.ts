@@ -58,8 +58,6 @@ export const subscribeToChanges = (
     )
     .subscribe()
 }
-
-// Helper function to upload files to Supabase Storage
 export const uploadFile = async (
   bucket: string,
   filePath: string,
@@ -75,8 +73,6 @@ export const uploadFile = async (
   if (error) throw error
   return data
 }
-
-// Helper function to get public URL for a file
 export const getPublicUrl = (bucket: string, filePath: string) => {
   const { data } = supabase.storage
     .from(bucket)
@@ -84,8 +80,6 @@ export const getPublicUrl = (bucket: string, filePath: string) => {
 
   return data.publicUrl
 }
-
-// Helper function to download files
 export const downloadFile = async (bucket: string, filePath: string) => {
   const { data, error } = await supabase.storage
     .from(bucket)
@@ -94,8 +88,6 @@ export const downloadFile = async (bucket: string, filePath: string) => {
   if (error) throw error
   return data
 }
-
-// Helper function to delete files
 export const deleteFile = async (bucket: string, filePath: string) => {
   const { data, error } = await supabase.storage
     .from(bucket)
@@ -104,8 +96,6 @@ export const deleteFile = async (bucket: string, filePath: string) => {
   if (error) throw error
   return data
 }
-
-// Helper function for database operations with error handling
 export const withErrorHandling = async <T>(
   operation: Promise<{ data: T | null; error: any }>
 ): Promise<{ data: T | null; error: any }> => {
@@ -117,7 +107,5 @@ export const withErrorHandling = async <T>(
     return { data: null, error }
   }
 }
-
-// Export Supabase types for use throughout the app
 export type Tables = Database['public']['Tables']
 export type Enums = Database['public']['Enums']
