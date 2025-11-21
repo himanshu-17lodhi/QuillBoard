@@ -6,8 +6,8 @@ export declare class DocumentsController {
         createdByUser: {
             id: string;
             email: string;
-            name: string | null;
-            avatarUrl: string | null;
+            name: string;
+            avatarUrl: string;
         };
     } & {
         id: string;
@@ -15,7 +15,7 @@ export declare class DocumentsController {
         updatedAt: Date;
         workspaceId: string;
         title: string;
-        parentId: string | null;
+        parentId: string;
         content: import("@prisma/client/runtime/library").JsonValue;
         createdBy: string;
     })[]>;
@@ -25,9 +25,9 @@ export declare class DocumentsController {
                 id: string;
                 createdAt: Date;
                 updatedAt: Date;
-                role: string;
-                userId: string;
                 workspaceId: string;
+                userId: string;
+                role: string;
             }[];
         } & {
             id: string;
@@ -42,7 +42,7 @@ export declare class DocumentsController {
         updatedAt: Date;
         workspaceId: string;
         title: string;
-        parentId: string | null;
+        parentId: string;
         content: import("@prisma/client/runtime/library").JsonValue;
         createdBy: string;
     }>;
@@ -53,8 +53,8 @@ export declare class DocumentsController {
         createdByUser: {
             id: string;
             email: string;
-            name: string | null;
-            avatarUrl: string | null;
+            name: string;
+            avatarUrl: string;
         };
     } & {
         id: string;
@@ -62,7 +62,7 @@ export declare class DocumentsController {
         updatedAt: Date;
         workspaceId: string;
         title: string;
-        parentId: string | null;
+        parentId: string;
         content: import("@prisma/client/runtime/library").JsonValue;
         createdBy: string;
     }>;
@@ -70,8 +70,8 @@ export declare class DocumentsController {
         createdByUser: {
             id: string;
             email: string;
-            name: string | null;
-            avatarUrl: string | null;
+            name: string;
+            avatarUrl: string;
         };
     } & {
         id: string;
@@ -79,7 +79,7 @@ export declare class DocumentsController {
         updatedAt: Date;
         workspaceId: string;
         title: string;
-        parentId: string | null;
+        parentId: string;
         content: import("@prisma/client/runtime/library").JsonValue;
         createdBy: string;
     }>;
@@ -89,7 +89,7 @@ export declare class DocumentsController {
         updatedAt: Date;
         workspaceId: string;
         title: string;
-        parentId: string | null;
+        parentId: string;
         content: import("@prisma/client/runtime/library").JsonValue;
         createdBy: string;
     }>;

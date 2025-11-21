@@ -15,9 +15,6 @@ const socket_io_1 = require("socket.io");
 const jwt_1 = require("@nestjs/jwt");
 const prisma_service_1 = require("../prisma.service");
 let CollaborationGateway = class CollaborationGateway {
-    jwtService;
-    prisma;
-    server;
     constructor(jwtService, prisma) {
         this.jwtService = jwtService;
         this.prisma = prisma;

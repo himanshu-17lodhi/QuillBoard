@@ -15,21 +15,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
-const passport_1 = require("@nestjs/passport");
 let AuthController = class AuthController {
-    authService;
     constructor(authService) {
         this.authService = authService;
     }
     async login(req) {
         return this.authService.login(req.user);
     }
-    async register(email, password, name) {
-        return this.authService.register(email, password, name);
+    async register(email, name) {
+        return this.authService.register(email, name);
     }
 };
 __decorate([
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('local')),
     (0, common_1.Post)('login'),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
@@ -39,10 +36,9 @@ __decorate([
 __decorate([
     (0, common_1.Post)('register'),
     __param(0, (0, common_1.Body)('email')),
-    __param(1, (0, common_1.Body)('password')),
-    __param(2, (0, common_1.Body)('name')),
+    __param(1, (0, common_1.Body)('name')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "register", null);
 AuthController = __decorate([

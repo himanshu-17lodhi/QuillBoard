@@ -10,16 +10,16 @@ export declare class WorkspacesService {
             user: {
                 id: string;
                 email: string;
-                name: string | null;
-                avatarUrl: string | null;
+                name: string;
+                avatarUrl: string;
             };
         } & {
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            role: string;
-            userId: string;
             workspaceId: string;
+            userId: string;
+            role: string;
         })[];
     } & {
         id: string;
@@ -33,16 +33,16 @@ export declare class WorkspacesService {
             user: {
                 id: string;
                 email: string;
-                name: string | null;
-                avatarUrl: string | null;
+                name: string;
+                avatarUrl: string;
             };
         } & {
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            role: string;
-            userId: string;
             workspaceId: string;
+            userId: string;
+            role: string;
         })[];
     } & {
         id: string;
@@ -56,16 +56,16 @@ export declare class WorkspacesService {
             user: {
                 id: string;
                 email: string;
-                name: string | null;
-                avatarUrl: string | null;
+                name: string;
+                avatarUrl: string;
             };
         } & {
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            role: string;
-            userId: string;
             workspaceId: string;
+            userId: string;
+            role: string;
         })[];
     } & {
         id: string;
@@ -92,23 +92,23 @@ export declare class WorkspacesService {
         user: {
             id: string;
             email: string;
-            name: string | null;
-            avatarUrl: string | null;
+            name: string;
+            avatarUrl: string;
         };
     } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        role: string;
-        userId: string;
         workspaceId: string;
+        userId: string;
+        role: string;
     }>;
     removeFromWorkspace(ownerId: string, workspaceId: string, memberId: string): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        role: string;
-        userId: string;
         workspaceId: string;
+        userId: string;
+        role: string;
     }>;
 }

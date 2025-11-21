@@ -1,13 +1,12 @@
-// backend/src/auth/auth.controller.ts
-import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from '@nestjs/passport';
+// import { LocalAuthGuard } from './local-auth.guard'; // Not needed for Supabase
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @UseGuards(AuthGuard('local'))
+  // We remove the LocalAuthGuard because Supabase handles login
   @Post('login')
   async login(@Request() req) {
     return this.authService.login(req.user);
@@ -16,9 +15,10 @@ export class AuthController {
   @Post('register')
   async register(
     @Body('email') email: string,
-    @Body('password') password: string,
+    // Removed @Body('password') because we don't store it
     @Body('name') name: string,
   ) {
-    return this.authService.register(email, password, name);
+    // FIXED: Only passing 2 arguments now (email, name)
+    return this.authService.register(email, name);
   }
 }

@@ -15,24 +15,23 @@ const passport_1 = require("@nestjs/passport");
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma.service");
 let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
-    prisma;
     constructor(prisma) {
         super({
             jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
-            secretOrKey: process.env.JWT_SECRET,
+            secretOrKey: process.env.JWT_SECRET || 'secretKey',
         });
         this.prisma = prisma;
     }
     async validate(payload) {
+        const id = payload.sub || payload.userId;
         const user = await this.prisma.user.findUnique({
-            where: { id: payload.sub },
+            where: { id },
         });
         if (!user) {
             throw new common_1.UnauthorizedException();
         }
-        const { password, ...result } = user;
-        return result;
+        return user;
     }
 };
 JwtStrategy = __decorate([

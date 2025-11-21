@@ -13,7 +13,6 @@ exports.WebsocketMiddleware = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 let WebsocketMiddleware = class WebsocketMiddleware {
-    jwtService;
     constructor(jwtService) {
         this.jwtService = jwtService;
     }

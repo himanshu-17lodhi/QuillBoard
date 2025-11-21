@@ -5,19 +5,19 @@ export declare class UsersService {
     findOne(id: string): Promise<{
         id: string;
         email: string;
-        name: string | null;
-        avatarUrl: string | null;
+        name: string;
+        avatarUrl: string;
         createdAt: Date;
         updatedAt: Date;
-    } | null>;
+    }>;
     update(id: string, data: {
         name?: string;
         avatarUrl?: string;
     }): Promise<{
         id: string;
         email: string;
-        name: string | null;
-        avatarUrl: string | null;
+        name: string;
+        avatarUrl: string;
         createdAt: Date;
         updatedAt: Date;
     }>;

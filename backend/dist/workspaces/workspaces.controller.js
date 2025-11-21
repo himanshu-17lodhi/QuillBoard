@@ -17,7 +17,6 @@ const common_1 = require("@nestjs/common");
 const passport_1 = require("@nestjs/passport");
 const workspaces_service_1 = require("./workspaces.service");
 let WorkspacesController = class WorkspacesController {
-    workspacesService;
     constructor(workspacesService) {
         this.workspacesService = workspacesService;
     }
