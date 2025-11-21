@@ -13,12 +13,12 @@ const documents_service_1 = require("./documents.service");
 const prisma_service_1 = require("../prisma.service");
 let DocumentsModule = class DocumentsModule {
 };
-exports.DocumentsModule = DocumentsModule;
-exports.DocumentsModule = DocumentsModule = __decorate([
+DocumentsModule = __decorate([
     (0, common_1.Module)({
         controllers: [documents_controller_1.DocumentsController],
         providers: [documents_service_1.DocumentsService, prisma_service_1.PrismaService],
         exports: [documents_service_1.DocumentsService],
     })
 ], DocumentsModule);
+exports.DocumentsModule = DocumentsModule;
 //# sourceMappingURL=documents.module.js.map

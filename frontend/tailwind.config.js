@@ -1,25 +1,31 @@
- /** @type {import('tailwindcss').Config} */
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './src/**/*.{html,js,jsx,ts,tsx}', // adjust to your project structure
-    './pages/**/*.{js,ts,jsx,tsx}',    // if using Next.js
-    './components/**/*.{js,ts,jsx,tsx}'
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: 'class',
+  darkMode: 'class', 
   theme: {
     extend: {
       colors: {
-        green: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
+        brand: {
+          DEFAULT: '#3ECF8E',
+          100: '#24b47e',
+          200: '#3ECF8E', 
+          300: '#6ee7b7',
+          400: '#a7f3d0',
+        },
+
+        sidebar: {
+           DEFAULT: '#1C1C1C',
+           hover: '#232323',
+           border: '#2E2E2E'
+        },
+        background: {
+           DEFAULT: '#111111', 
+           layer: '#181818',  
         },
         gray: {
           50: '#f9fafb',
@@ -32,6 +38,7 @@ module.exports = {
           700: '#374151',
           800: '#1f2937',
           900: '#111827',
+          1000: '#0D0D0D',
         },
       },
       fontFamily: {

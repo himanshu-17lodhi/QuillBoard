@@ -212,9 +212,9 @@ let DocumentsService = class DocumentsService {
         });
     }
 };
-exports.DocumentsService = DocumentsService;
-exports.DocumentsService = DocumentsService = __decorate([
+DocumentsService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService])
 ], DocumentsService);
+exports.DocumentsService = DocumentsService;
 //# sourceMappingURL=documents.service.js.map

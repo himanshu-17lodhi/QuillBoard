@@ -32,9 +32,9 @@ let WebsocketMiddleware = class WebsocketMiddleware {
         }
     }
 };
-exports.WebsocketMiddleware = WebsocketMiddleware;
-exports.WebsocketMiddleware = WebsocketMiddleware = __decorate([
+WebsocketMiddleware = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [jwt_1.JwtService])
 ], WebsocketMiddleware);
+exports.WebsocketMiddleware = WebsocketMiddleware;
 //# sourceMappingURL=websocket.middleware.js.map

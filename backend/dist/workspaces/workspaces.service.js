@@ -198,9 +198,9 @@ let WorkspacesService = class WorkspacesService {
         });
     }
 };
-exports.WorkspacesService = WorkspacesService;
-exports.WorkspacesService = WorkspacesService = __decorate([
+WorkspacesService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService])
 ], WorkspacesService);
+exports.WorkspacesService = WorkspacesService;
 //# sourceMappingURL=workspaces.service.js.map

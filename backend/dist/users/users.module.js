@@ -13,12 +13,12 @@ const users_controller_1 = require("./users.controller");
 const prisma_service_1 = require("../prisma.service");
 let UsersModule = class UsersModule {
 };
-exports.UsersModule = UsersModule;
-exports.UsersModule = UsersModule = __decorate([
+UsersModule = __decorate([
     (0, common_1.Module)({
         providers: [users_service_1.UsersService, prisma_service_1.PrismaService],
         controllers: [users_controller_1.UsersController],
         exports: [users_service_1.UsersService],
     })
 ], UsersModule);
+exports.UsersModule = UsersModule;
 //# sourceMappingURL=users.module.js.map

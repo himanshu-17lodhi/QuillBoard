@@ -15,8 +15,7 @@ const workspaces_module_1 = require("./workspaces/workspaces.module");
 const documents_module_1 = require("./documents/documents.module");
 let AppModule = class AppModule {
 };
-exports.AppModule = AppModule;
-exports.AppModule = AppModule = __decorate([
+AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule.forRoot({ isGlobal: true }),
@@ -27,4 +26,5 @@ exports.AppModule = AppModule = __decorate([
         ],
     })
 ], AppModule);
+exports.AppModule = AppModule;
 //# sourceMappingURL=app.module.js.map

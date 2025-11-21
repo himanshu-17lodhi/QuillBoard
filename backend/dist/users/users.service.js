@@ -45,9 +45,9 @@ let UsersService = class UsersService {
         });
     }
 };
-exports.UsersService = UsersService;
-exports.UsersService = UsersService = __decorate([
+UsersService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService])
 ], UsersService);
+exports.UsersService = UsersService;
 //# sourceMappingURL=users.service.js.map

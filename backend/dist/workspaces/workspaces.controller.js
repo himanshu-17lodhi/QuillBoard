@@ -43,7 +43,6 @@ let WorkspacesController = class WorkspacesController {
         return this.workspacesService.removeFromWorkspace(req.user.id, id, memberId);
     }
 };
-exports.WorkspacesController = WorkspacesController;
 __decorate([
     (0, common_1.Get)(),
     __param(0, (0, common_1.Request)()),
@@ -102,9 +101,10 @@ __decorate([
     __metadata("design:paramtypes", [Object, String, String]),
     __metadata("design:returntype", void 0)
 ], WorkspacesController.prototype, "removeFromWorkspace", null);
-exports.WorkspacesController = WorkspacesController = __decorate([
+WorkspacesController = __decorate([
     (0, common_1.Controller)('workspaces'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     __metadata("design:paramtypes", [workspaces_service_1.WorkspacesService])
 ], WorkspacesController);
+exports.WorkspacesController = WorkspacesController;
 //# sourceMappingURL=workspaces.controller.js.map

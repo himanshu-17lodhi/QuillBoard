@@ -27,8 +27,8 @@ let ValidationPipe = class ValidationPipe {
         return !types.includes(metatype);
     }
 };
-exports.ValidationPipe = ValidationPipe;
-exports.ValidationPipe = ValidationPipe = __decorate([
+ValidationPipe = __decorate([
     (0, common_1.Injectable)()
 ], ValidationPipe);
+exports.ValidationPipe = ValidationPipe;
 //# sourceMappingURL=validation.pipe.js.map

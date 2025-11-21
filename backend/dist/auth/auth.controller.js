@@ -28,7 +28,6 @@ let AuthController = class AuthController {
         return this.authService.register(email, password, name);
     }
 };
-exports.AuthController = AuthController;
 __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('local')),
     (0, common_1.Post)('login'),
@@ -46,8 +45,9 @@ __decorate([
     __metadata("design:paramtypes", [String, String, String]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "register", null);
-exports.AuthController = AuthController = __decorate([
+AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
+exports.AuthController = AuthController;
 //# sourceMappingURL=auth.controller.js.map

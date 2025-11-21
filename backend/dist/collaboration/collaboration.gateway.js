@@ -102,7 +102,6 @@ let CollaborationGateway = class CollaborationGateway {
         }
     }
 };
-exports.CollaborationGateway = CollaborationGateway;
 __decorate([
     (0, websockets_1.WebSocketServer)(),
     __metadata("design:type", socket_io_1.Server)
@@ -125,7 +124,7 @@ __decorate([
     __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
     __metadata("design:returntype", Promise)
 ], CollaborationGateway.prototype, "handleContentUpdate", null);
-exports.CollaborationGateway = CollaborationGateway = __decorate([
+CollaborationGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({
         cors: {
             origin: process.env.FRONTEND_URL || 'http://localhost:3000',
@@ -135,4 +134,5 @@ exports.CollaborationGateway = CollaborationGateway = __decorate([
     __metadata("design:paramtypes", [jwt_1.JwtService,
         prisma_service_1.PrismaService])
 ], CollaborationGateway);
+exports.CollaborationGateway = CollaborationGateway;
 //# sourceMappingURL=collaboration.gateway.js.map

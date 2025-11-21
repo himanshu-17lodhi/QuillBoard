@@ -2,18 +2,120 @@ import { WorkspacesService } from './workspaces.service';
 export declare class WorkspacesController {
     private workspacesService;
     constructor(workspacesService: WorkspacesService);
-    getWorkspaces(req: any): Promise<any>;
-    getWorkspace(req: any, id: string): Promise<any>;
+    getWorkspaces(req: any): Promise<({
+        _count: {
+            documents: number;
+        };
+        members: ({
+            user: {
+                id: string;
+                email: string;
+                name: string | null;
+                avatarUrl: string | null;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            role: string;
+            userId: string;
+            workspaceId: string;
+        })[];
+    } & {
+        id: string;
+        name: string;
+        createdAt: Date;
+        updatedAt: Date;
+        ownerId: string;
+    })[]>;
+    getWorkspace(req: any, id: string): Promise<{
+        members: ({
+            user: {
+                id: string;
+                email: string;
+                name: string | null;
+                avatarUrl: string | null;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            role: string;
+            userId: string;
+            workspaceId: string;
+        })[];
+    } & {
+        id: string;
+        name: string;
+        createdAt: Date;
+        updatedAt: Date;
+        ownerId: string;
+    }>;
     createWorkspace(req: any, body: {
         name: string;
-    }): Promise<any>;
+    }): Promise<{
+        members: ({
+            user: {
+                id: string;
+                email: string;
+                name: string | null;
+                avatarUrl: string | null;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            role: string;
+            userId: string;
+            workspaceId: string;
+        })[];
+    } & {
+        id: string;
+        name: string;
+        createdAt: Date;
+        updatedAt: Date;
+        ownerId: string;
+    }>;
     updateWorkspace(req: any, id: string, body: {
         name: string;
-    }): Promise<any>;
-    deleteWorkspace(req: any, id: string): Promise<any>;
+    }): Promise<{
+        id: string;
+        name: string;
+        createdAt: Date;
+        updatedAt: Date;
+        ownerId: string;
+    }>;
+    deleteWorkspace(req: any, id: string): Promise<{
+        id: string;
+        name: string;
+        createdAt: Date;
+        updatedAt: Date;
+        ownerId: string;
+    }>;
     inviteToWorkspace(req: any, id: string, body: {
         email: string;
         role: string;
-    }): Promise<any>;
-    removeFromWorkspace(req: any, id: string, memberId: string): Promise<any>;
+    }): Promise<{
+        user: {
+            id: string;
+            email: string;
+            name: string | null;
+            avatarUrl: string | null;
+        };
+    } & {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        role: string;
+        userId: string;
+        workspaceId: string;
+    }>;
+    removeFromWorkspace(req: any, id: string, memberId: string): Promise<{
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        role: string;
+        userId: string;
+        workspaceId: string;
+    }>;
 }

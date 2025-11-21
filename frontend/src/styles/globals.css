@@ -1,84 +1,28 @@
-/* 1. Import Google Fonts at the very top */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-/* 2. Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 3. Global resets */
-* {
-  @apply box-border m-0 p-0;
+:root {
+  --foreground-rgb: 255, 255, 255;
 }
 
-html, body {
-  @apply max-w-full overflow-x-hidden font-sans;
-}
-
-a {
-  @apply text-inherit no-underline;
-}
-
-/* ProseMirror editor styles */
-.ProseMirror {
-  @apply outline-none p-4;
-}
-
-.ProseMirror p {
-  @apply mb-4;
-}
-
-.ProseMirror h1 {
-  @apply text-2xl font-bold mb-6;
-}
-
-.ProseMirror h2 {
-  @apply text-xl font-semibold mb-4;
-}
-
-.ProseMirror h3 {
-  @apply text-lg font-semibold mb-3;
-}
-
-.ProseMirror ul,
-.ProseMirror ol {
-  @apply pl-6 mb-4;
-}
-
-.ProseMirror li {
-  @apply mb-2;
-}
-
-.ProseMirror blockquote {
-  @apply border-l-4 border-gray-300 pl-4 mb-4 italic;
-}
-
-.ProseMirror code {
-  @apply bg-gray-100 px-1 py-0.5 rounded text-sm font-mono;
-}
-
-.ProseMirror pre {
-  @apply bg-gray-800 text-gray-100 p-4 rounded mb-4 overflow-x-auto font-mono;
-}
-
-.ProseMirror pre code {
-  @apply bg-transparent p-0 text-inherit;
-}
-
-.ProseMirror img {
-  @apply max-w-full h-auto rounded mb-4;
-}
-
-/* Collaboration cursor styles */
-.collaboration-cursor__caret {
-  @apply border-l border-r border-black mx-[-1px] pointer-events-none relative break-normal;
-}
-
-.collaboration-cursor__label {
-  @apply rounded-[3px] text-black text-[12px] font-semibold absolute top-[-1.4em] left-[-1px] leading-normal px-[0.3rem] py-[0.1rem] select-none whitespace-nowrap;
-}
-
-/* Dark mode */
 body {
-  @apply bg-gradient-to-b from-gray-50 to-gray-100 text-black dark:from-gray-900 dark:to-gray-900 dark:text-white;
+  @apply text-white font-sans antialiased;
+  background-color: #111111; 
+}
+
+/* Supabase-style Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #111111;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
 }

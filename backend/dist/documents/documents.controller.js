@@ -37,7 +37,6 @@ let DocumentsController = class DocumentsController {
         return this.documentsService.deleteDocument(req.user.id, documentId);
     }
 };
-exports.DocumentsController = DocumentsController;
 __decorate([
     (0, common_1.Get)(),
     __param(0, (0, common_1.Request)()),
@@ -80,9 +79,10 @@ __decorate([
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], DocumentsController.prototype, "deleteDocument", null);
-exports.DocumentsController = DocumentsController = __decorate([
+DocumentsController = __decorate([
     (0, common_1.Controller)('workspaces/:workspaceId/documents'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     __metadata("design:paramtypes", [documents_service_1.DocumentsService])
 ], DocumentsController);
+exports.DocumentsController = DocumentsController;
 //# sourceMappingURL=documents.controller.js.map

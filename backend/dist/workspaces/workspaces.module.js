@@ -13,11 +13,11 @@ const workspaces_controller_1 = require("./workspaces.controller");
 const prisma_service_1 = require("../prisma.service");
 let WorkspacesModule = class WorkspacesModule {
 };
-exports.WorkspacesModule = WorkspacesModule;
-exports.WorkspacesModule = WorkspacesModule = __decorate([
+WorkspacesModule = __decorate([
     (0, common_1.Module)({
         providers: [workspaces_service_1.WorkspacesService, prisma_service_1.PrismaService],
         controllers: [workspaces_controller_1.WorkspacesController],
     })
 ], WorkspacesModule);
+exports.WorkspacesModule = WorkspacesModule;
 //# sourceMappingURL=workspaces.module.js.map

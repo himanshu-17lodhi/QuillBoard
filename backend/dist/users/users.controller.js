@@ -28,7 +28,6 @@ let UsersController = class UsersController {
         return this.usersService.update(req.user.id, body);
     }
 };
-exports.UsersController = UsersController;
 __decorate([
     (0, common_1.Get)('profile'),
     __param(0, (0, common_1.Request)()),
@@ -44,9 +43,10 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "updateProfile", null);
-exports.UsersController = UsersController = __decorate([
+UsersController = __decorate([
     (0, common_1.Controller)('users'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     __metadata("design:paramtypes", [users_service_1.UsersService])
 ], UsersController);
+exports.UsersController = UsersController;
 //# sourceMappingURL=users.controller.js.map

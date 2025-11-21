@@ -17,8 +17,7 @@ const users_module_1 = require("../users/users.module");
 const prisma_service_1 = require("../prisma.service");
 let AuthModule = class AuthModule {
 };
-exports.AuthModule = AuthModule;
-exports.AuthModule = AuthModule = __decorate([
+AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
             users_module_1.UsersModule,
@@ -32,4 +31,5 @@ exports.AuthModule = AuthModule = __decorate([
         controllers: [auth_controller_1.AuthController],
     })
 ], AuthModule);
+exports.AuthModule = AuthModule;
 //# sourceMappingURL=auth.module.js.map
