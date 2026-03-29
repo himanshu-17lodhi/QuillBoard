@@ -1,22 +1,15 @@
-# Dependencies
-node_modules/
-
-# Next.js build output
-.next/
-out/
-build/
-dist/
-
-# Environment variables
+node_modules
+.next
+.turbo
+dist
+build
+.venv
+__pycache__
+.pytest_cache
+.mypy_cache
+.ruff_cache
+*.pyc
 .env
 .env.local
-.env.*
+coverage
 
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# System Files
-.DS_Store
-Thumbs.db

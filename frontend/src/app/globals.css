@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --font-sans: "Aptos", "Segoe UI Variable", "Segoe UI", "Helvetica Neue", sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  font-family: var(--font-sans);
+  color: #281d13;
+}
+
+code {
+  font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.hybrid-editor .ProseMirror {
+  min-height: 560px;
+  outline: none;
+  font-size: 1rem;
+  line-height: 1.85;
+  color: #34271d;
+}
+
+.hybrid-editor .ProseMirror > * + * {
+  margin-top: 0.9rem;
+}
+
+.hybrid-editor .ProseMirror h1,
+.hybrid-editor .ProseMirror h2,
+.hybrid-editor .ProseMirror h3 {
+  font-family: var(--font-serif);
+  color: #24180f;
+  line-height: 1.15;
+}
+
+.hybrid-editor .ProseMirror h1 {
+  font-size: 2.2rem;
+}
+
+.hybrid-editor .ProseMirror h2 {
+  font-size: 1.55rem;
+}
+
+.hybrid-editor .ProseMirror blockquote {
+  margin: 1.1rem 0;
+  border-left: 4px solid #c9b187;
+  background: rgba(255, 250, 240, 0.8);
+  padding: 0.9rem 1rem;
+  color: #5a4631;
+}
+
+.hybrid-editor .ProseMirror ul {
+  padding-left: 1.25rem;
+}
+
+.hybrid-editor .ProseMirror p.is-editor-empty:first-child::before {
+  color: #9a8265;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.prose-panel h1,
+.prose-panel h2,
+.prose-panel h3,
+.prose-panel h4 {
+  margin-top: 0;
+  font-family: var(--font-serif);
+  color: #281d13;
+}
+
+.prose-panel p,
+.prose-panel li,
+.prose-panel blockquote {
+  line-height: 1.75;
+}
+
+.prose-panel blockquote {
+  margin: 0;
+  border-left: 3px solid #dcccad;
+  padding-left: 1rem;
+  color: #61482c;
+}
+
+.tippy-box {
+  background: transparent;
+}

@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("SUPABASE_DATABASE_URL")
+}
+
+enum DocumentKind {
+  folder
+  document
+
+  @@map("document_kind")
+}
+
+model Document {
+  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ownerId     String      @map("owner_id") @db.Uuid
+  parentId    String?     @map("parent_id") @db.Uuid
+  kind        DocumentKind
+  title       String
+  slug        String
+  contentJson Json?       @map("content_json")
+  plaintext   String?
+  pluginData  Json        @default("{}") @map("plugin_data")
+  sortOrder   Int         @default(0) @map("sort_order")
+  version     Int         @default(1)
+  archivedAt  DateTime?   @map("archived_at")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  parent   Document?  @relation("DocumentTree", fields: [parentId], references: [id])
+  children Document[] @relation("DocumentTree")
+  snapshots MarkdownPreviewSnapshot[]
+
+  @@index([ownerId, parentId, sortOrder])
+  @@unique([ownerId, slug])
+  @@map("documents")
+}
+
+model DailyNotesPreference {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String   @unique @map("user_id") @db.Uuid
+  timezone   String   @default("UTC")
+  dateFormat String   @default("yyyy-MM-dd") @map("date_format")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("daily_notes_preferences")
+}
+
+model MarkdownPreviewSnapshot {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  documentId String   @map("document_id") @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  html       String
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId, createdAt])
+  @@map("markdown_previewer_snapshots")
+}
